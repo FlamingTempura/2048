@@ -1,0 +1,3 @@
+{
+    "include": ["build.ts", "server/src/**/*", "client/src/**/*", "common/**/*", "node_modules/**/*"]
+}
