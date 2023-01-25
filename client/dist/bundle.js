@@ -28301,9 +28301,10 @@
   }
   function useMoveMutation(gameId) {
     const queryClient = useQueryClient();
+    const { playerName } = (0, import_react6.useContext)(PlayerContext);
     return useMutation({
       mutationKey: ["move"],
-      mutationFn: (data) => apiRequest("POST", `/api/game/${gameId}/move`, data),
+      mutationFn: ({ direction }) => apiRequest("POST", `/api/game/${gameId}/move`, { direction, playerName }),
       onSuccess: () => queryClient.invalidateQueries(["game", gameId])
     });
   }
@@ -29563,18 +29564,22 @@
 
   // client/src/ScoreBoard.tsx
   var import_react9 = __toESM(require_react());
-  function ScoreBoard({ game }) {
+  function ScoreBoard({
+    game,
+    allowKick,
+    gameEnded
+  }) {
     const { playerName } = (0, import_react9.useContext)(PlayerContext);
-    const player = game.players.find((p) => p.name === playerName);
     const activePlayer = game.players[game.activePlayerIndex];
-    return /* @__PURE__ */ import_react9.default.createElement(ScoreBoardContainer, null, /* @__PURE__ */ import_react9.default.createElement(Header, null, "Scores"), /* @__PURE__ */ import_react9.default.createElement(ScoreBoardList, null, game.players.map((player2) => /* @__PURE__ */ import_react9.default.createElement(
+    return /* @__PURE__ */ import_react9.default.createElement(ScoreBoardContainer, null, /* @__PURE__ */ import_react9.default.createElement(Header, null, "Scores"), /* @__PURE__ */ import_react9.default.createElement(ScoreBoardList, null, game.players.map((player) => /* @__PURE__ */ import_react9.default.createElement(
       PlayerScoreEntry,
       {
-        key: player2.name,
-        player: player2,
+        key: player.name,
+        player,
         gameId: game.id,
-        isYou: player2.name === playerName,
-        isPlayersTurn: player2.name === activePlayer.name
+        isYou: player.name === playerName,
+        isPlayersTurn: !gameEnded && player.name === activePlayer.name,
+        allowKick
       }
     ))));
   }
@@ -29582,10 +29587,11 @@
     gameId,
     player,
     isPlayersTurn,
-    isYou
+    isYou,
+    allowKick
   }) {
     const kickMutation = useKickMutation(gameId);
-    return /* @__PURE__ */ import_react9.default.createElement(ScoreBoardListItem, null, /* @__PURE__ */ import_react9.default.createElement(Name, null, player.name, " ", isYou ? "(You)" : null, isPlayersTurn && /* @__PURE__ */ import_react9.default.createElement(PlayerTurn, null, isYou ? "Take your turn" : "Taking turn")), /* @__PURE__ */ import_react9.default.createElement(Score, null, player.score), /* @__PURE__ */ import_react9.default.createElement(
+    return /* @__PURE__ */ import_react9.default.createElement(ScoreBoardListItem, null, /* @__PURE__ */ import_react9.default.createElement(Name, null, player.name, " ", isYou ? "(You)" : null, isPlayersTurn && /* @__PURE__ */ import_react9.default.createElement(PlayerTurn, null, isYou ? "Take your turn" : "Taking turn")), /* @__PURE__ */ import_react9.default.createElement(Score, null, player.score), allowKick && /* @__PURE__ */ import_react9.default.createElement(
       KickButton,
       {
         onClick: () => kickMutation.mutate({ playerName: player.name })
@@ -29634,9 +29640,13 @@
     const moveMutation = useMoveMutation(game.id);
     const player = game.players.find((p) => p.name === playerName);
     const activePlayer = game.players[game.activePlayerIndex];
+    const spectating = !player;
     const isActivePlayer = player?.name === activePlayer.name;
     const [showPlayerWarning, setShowPlayerWarning] = (0, import_react10.useState)(false);
     (0, import_react10.useEffect)(() => {
+      if (game.state === "ENDED") {
+        return;
+      }
       const onKeyDown = (e2) => {
         if (!isActivePlayer) {
           setShowPlayerWarning(true);
@@ -29664,8 +29674,16 @@
       };
       document.addEventListener("keydown", onKeyDown);
       return () => document.removeEventListener("keydown", onKeyDown);
-    }, [isActivePlayer, moveMutation]);
-    return /* @__PURE__ */ import_react10.default.createElement("div", null, /* @__PURE__ */ import_react10.default.createElement("h2", null, "2048"), !player && /* @__PURE__ */ import_react10.default.createElement("p", null, "You are spectating"), /* @__PURE__ */ import_react10.default.createElement(Container, null, /* @__PURE__ */ import_react10.default.createElement(GameBoardContainer, null, /* @__PURE__ */ import_react10.default.createElement(GameBoardGrid, { game }), showPlayerWarning && /* @__PURE__ */ import_react10.default.createElement(PlayerWarning, null, "Wait your turn!")), /* @__PURE__ */ import_react10.default.createElement(ScoreBoard, { game })));
+    }, [isActivePlayer, moveMutation, game.state]);
+    const highScorer = game.players.sort((a2, b2) => b2.score - a2.score)[0];
+    return /* @__PURE__ */ import_react10.default.createElement("div", null, /* @__PURE__ */ import_react10.default.createElement("h2", null, "2048"), game.state === "ENDED" ? /* @__PURE__ */ import_react10.default.createElement(import_react10.default.Fragment, null, /* @__PURE__ */ import_react10.default.createElement("p", null, "Game ended"), /* @__PURE__ */ import_react10.default.createElement("h1", null, highScorer.name, " wins! ")) : /* @__PURE__ */ import_react10.default.createElement(import_react10.default.Fragment, null, spectating ? /* @__PURE__ */ import_react10.default.createElement("p", null, "You are spectating") : /* @__PURE__ */ import_react10.default.createElement("p", null, isActivePlayer ? "Your turn" : "Wait for other players...")), /* @__PURE__ */ import_react10.default.createElement(Container, null, /* @__PURE__ */ import_react10.default.createElement(GameBoardContainer, null, /* @__PURE__ */ import_react10.default.createElement(GameBoardGrid, { game }), showPlayerWarning && /* @__PURE__ */ import_react10.default.createElement(PlayerWarning, null, "Wait your turn!")), /* @__PURE__ */ import_react10.default.createElement(
+      ScoreBoard,
+      {
+        game,
+        allowKick: !spectating && game.state === "STARTED",
+        gameEnded: game.state === "ENDED"
+      }
+    )));
   }
   function GameBoardGrid({ game }) {
     return /* @__PURE__ */ import_react10.default.createElement(Grid, { size: game.size }, game.board.map((row, y2) => /* @__PURE__ */ import_react10.default.createElement(import_react10.Fragment, { key: y2 }, row.map((cell, x2) => /* @__PURE__ */ import_react10.default.createElement(Cell, { key: x2, style: { background: getColor(cell) } }, cell)))));
@@ -29760,9 +29778,8 @@
       case "LOBBY":
         return /* @__PURE__ */ import_react12.default.createElement(LobbyScreen, { game });
       case "STARTED":
-        return /* @__PURE__ */ import_react12.default.createElement(GameBoard, { game });
       case "ENDED":
-        return /* @__PURE__ */ import_react12.default.createElement("p", null, "This game has ended");
+        return /* @__PURE__ */ import_react12.default.createElement(GameBoard, { game });
     }
   }
 

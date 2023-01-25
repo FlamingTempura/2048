@@ -2,8 +2,19 @@ import { Direction, Game, ShiftResult } from "./types";
 import sample from "lodash/sample";
 import { cloneDeep } from "lodash";
 
-export function shift(game: Game, direction: Direction): Game {
-  const newGame = cloneDeep(game);
+const END_GAME_SCORE = 32; // 2048;
+
+export function shift(
+  game: Game,
+  direction: Direction,
+  playerName: string
+): Game {
+  let playerIndex = game.players.findIndex((p) => p.name === playerName);
+  if (playerIndex !== game.activePlayerIndex) {
+    throw new Error("Not your turn");
+  }
+
+  let newGame = cloneDeep(game);
   let shiftResult: ShiftResult;
   switch (direction) {
     case "N":
@@ -23,6 +34,9 @@ export function shift(game: Game, direction: Direction): Game {
   }
   newGame.board = shiftResult.board;
   newGame.players[game.activePlayerIndex].score += shiftResult.score;
+  if (shiftResult.score >= END_GAME_SCORE) {
+    newGame = endGame(newGame);
+  }
   return newGame;
 }
 
@@ -55,7 +69,6 @@ function shiftWest(board: number[][], size: number): ShiftResult {
       if (row[x] === row[x + 1]) {
         score = row[x] * 2;
         row[x] = row[x] * 2;
-        // TODO: if 2048, game is won
         row[x + 1] = -1; // ignore the next cell
       }
     }
@@ -94,14 +107,15 @@ export function addNumber(game: Game): Game {
 
   const board = cloneDeep(game.board);
 
+  let state = game.state;
   if (emptyCoords.length === 0) {
-    throw "TODO: handle end game";
+    game = endGame(game); // Needs cleanup
   } else {
     const [x, y] = sample(emptyCoords);
     board[y][x] = 2;
   }
 
-  return { ...game, board };
+  return { ...game, board, state };
 }
 
 function emptyBoard(size: number): number[][] {
@@ -141,6 +155,10 @@ export function startGame(game: Game): Game {
     throw new Error("Game has ended");
   }
   return { ...game, state: "STARTED" };
+}
+
+function endGame(game: Game): Game {
+  return { ...game, state: "ENDED" };
 }
 
 export function kickPlayer(game: Game, playerName: string): Game {

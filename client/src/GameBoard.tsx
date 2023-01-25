@@ -11,12 +11,16 @@ export function GameBoard({ game }: { game: GameWithId }) {
 
   const player = game.players.find((p) => p.name === playerName);
   const activePlayer = game.players[game.activePlayerIndex];
+  const spectating = !player;
 
   const isActivePlayer = player?.name === activePlayer.name;
 
   const [showPlayerWarning, setShowPlayerWarning] = useState(false);
 
   useEffect(() => {
+    if (game.state === "ENDED") {
+      return;
+    }
     const onKeyDown = (e: KeyboardEvent) => {
       if (!isActivePlayer) {
         setShowPlayerWarning(true);
@@ -44,20 +48,39 @@ export function GameBoard({ game }: { game: GameWithId }) {
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [isActivePlayer, moveMutation]);
+  }, [isActivePlayer, moveMutation, game.state]);
+
+  const highScorer = game.players.sort((a, b) => b.score - a.score)[0];
 
   return (
     <div>
       <h2>2048</h2>
 
-      {!player && <p>You are spectating</p>}
+      {game.state === "ENDED" ? (
+        <>
+          <p>Game ended</p>
+          <h1>{highScorer.name} wins! </h1>
+        </>
+      ) : (
+        <>
+          {spectating ? (
+            <p>You are spectating</p>
+          ) : (
+            <p>{isActivePlayer ? "Your turn" : "Wait for other players..."}</p>
+          )}
+        </>
+      )}
 
       <Container>
         <GameBoardContainer>
           <GameBoardGrid game={game} />
           {showPlayerWarning && <PlayerWarning>Wait your turn!</PlayerWarning>}
         </GameBoardContainer>
-        <ScoreBoard game={game} />
+        <ScoreBoard
+          game={game}
+          allowKick={!spectating && game.state === "STARTED"}
+          gameEnded={game.state === "ENDED"}
+        />
       </Container>
     </div>
   );

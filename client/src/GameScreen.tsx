@@ -24,8 +24,7 @@ export function GameScreen() {
     case "LOBBY":
       return <LobbyScreen game={game} />;
     case "STARTED":
-      return <GameBoard game={game} />;
     case "ENDED":
-      return <p>This game has ended</p>;
+      return <GameBoard game={game} />;
   }
 }

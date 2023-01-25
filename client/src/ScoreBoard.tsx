@@ -4,9 +4,16 @@ import { GameWithId, Player } from "../../common/types";
 import { useKickMutation } from "./api";
 import { PlayerContext } from "./PlayerContext";
 
-export function ScoreBoard({ game }: { game: GameWithId }) {
+export function ScoreBoard({
+  game,
+  allowKick,
+  gameEnded,
+}: {
+  game: GameWithId;
+  allowKick: boolean;
+  gameEnded: boolean;
+}) {
   const { playerName } = useContext(PlayerContext);
-  const player = game.players.find((p) => p.name === playerName);
   const activePlayer = game.players[game.activePlayerIndex];
 
   return (
@@ -19,7 +26,8 @@ export function ScoreBoard({ game }: { game: GameWithId }) {
             player={player}
             gameId={game.id}
             isYou={player.name === playerName}
-            isPlayersTurn={player.name === activePlayer.name}
+            isPlayersTurn={!gameEnded && player.name === activePlayer.name}
+            allowKick={allowKick}
           />
         ))}
       </ScoreBoardList>
@@ -32,11 +40,13 @@ function PlayerScoreEntry({
   player,
   isPlayersTurn,
   isYou,
+  allowKick,
 }: {
   gameId: string;
   player: Player;
   isPlayersTurn: boolean;
-  isYou;
+  isYou: boolean;
+  allowKick: boolean;
 }) {
   const kickMutation = useKickMutation(gameId);
 
@@ -49,11 +59,13 @@ function PlayerScoreEntry({
         )}
       </Name>
       <Score>{player.score}</Score>
-      <KickButton
-        onClick={() => kickMutation.mutate({ playerName: player.name })}
-      >
-        {isYou ? "Leave" : "Kick"}
-      </KickButton>
+      {allowKick && (
+        <KickButton
+          onClick={() => kickMutation.mutate({ playerName: player.name })}
+        >
+          {isYou ? "Leave" : "Kick"}
+        </KickButton>
+      )}
     </ScoreBoardListItem>
   );
 }

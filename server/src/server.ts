@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import express from "express";
+import fastify from "fastify";
 import { resolve } from "path";
 import {
   addNumber,
@@ -10,84 +10,137 @@ import {
   shift,
   startGame,
 } from "../../common/puzzle";
+import { Direction } from "../../common/types";
 import { getGame, storeGame } from "./store";
+import fastifyStatic from "@fastify/static";
 
 const PORT = 8090;
 const DIST_PATH = resolve(__dirname, "../../client/dist");
 
-const app = express();
+const app = fastify();
 
-app.use(express.json());
-app.use(express.static(DIST_PATH));
+app.register(fastifyStatic, { root: DIST_PATH });
 
 // Create game
-// Expects { hostPlayerName: string, size: number }
-app.post("/api/game", async (req, res, next) => {
-  if (
-    typeof req.body.hostPlayerName !== "string" &&
-    req.body.hostPlayerName !== ""
-    // TODO: check size number
-  ) {
-    next(new Error("Expected host player name"));
-  } else {
+export type CreateGameBody = { hostPlayerName: string; size: number };
+app.post<{ Body: CreateGameBody }>(
+  "/api/game",
+  {
+    schema: {
+      body: {
+        type: "object",
+        required: ["hostPlayerName", "size"],
+        properties: {
+          hostPlayerName: { type: "string" },
+          size: { type: "number" },
+        },
+      },
+    },
+  },
+  async (req) => {
     const id = randomUUID();
     let game = createGame(req.body.size);
     game = addPlayer(game, req.body.hostPlayerName);
     game = addNumber(game);
-    storeGame(id, game);
-    res.json({ id });
+    await storeGame(id, game);
+    return { id };
   }
-});
+);
 
 // Get game
-app.get("/api/game/:id", (req, res, next) => {
-  res.json(getGame(req.params.id));
+app.get<{ Params: { id: string } }>("/api/game/:id", (req) => {
+  return getGame(req.params.id);
 });
 
+// Start game
 // Expects { state: 'STARTED' }
-app.put("/api/game/:id", (req, res, next) => {
-  if (req.body.state === "STARTED") {
+app.put<{ Params: { id: string } }>(
+  "/api/game/:id",
+  {
+    schema: {
+      body: {
+        type: "object",
+        required: ["state"],
+        properties: { state: { const: "STARTED" } },
+      },
+    },
+  },
+  (req) => {
     let game = getGame(req.params.id);
     game = startGame(game);
     storeGame(req.params.id, game);
-    res.json(game);
-  } else {
-    next(new Error("Invalid request"));
+    return { ok: true };
   }
-});
+);
 
 // Join game
-app.post("/api/game/:id/player", async (req, res, next) => {
-  let game = getGame(req.params.id);
-  game = addPlayer(game, req.body.playerName);
-  await storeGame(req.params.id, game);
-  res.json({ ok: true });
-});
+export type JoinGameBody = { playerName: string };
+app.post<{ Params: { id: string }; Body: JoinGameBody }>(
+  "/api/game/:id/player",
+  {
+    schema: {
+      body: {
+        type: "object",
+        required: ["playerName"],
+        properties: { playerName: { type: "string" } },
+      },
+    },
+  },
+  async (req) => {
+    let game = getGame(req.params.id);
+    game = addPlayer(game, req.body.playerName);
+    await storeGame(req.params.id, game);
+    return { ok: true };
+  }
+);
 
 // Kick player
-app.delete("/api/game/:id/player/:name", async (req, res, next) => {
-  let game = getGame(req.params.id);
-  game = kickPlayer(game, req.params.name);
-  await storeGame(req.params.id, game);
-  res.status(204).json({ ok: true });
-});
+app.delete<{ Params: { id: string; name: string } }>(
+  "/api/game/:id/player/:name",
+  async (req) => {
+    let game = getGame(req.params.id);
+    game = kickPlayer(game, req.params.name);
+    await storeGame(req.params.id, game);
+    return { ok: true };
+  }
+);
 
 // Shift board
-// Expects { direction: N/E/S/W }
-app.post("/api/game/:id/move", async (req, res) => {
-  let game = getGame(req.params.id);
-  game = shift(game, req.body.direction);
-  game = nextPlayer(game);
-  game = addNumber(game);
-  await storeGame(req.params.id, game);
-  res.json({ ok: true });
-});
+// Expects { direction: N/E/S/W, playerName: string } - we check that it's playerName's turn
+export type ShiftBoardBody = { direction: Direction; playerName: string };
+app.post<{ Params: { id: string }; Body: ShiftBoardBody }>(
+  "/api/game/:id/move",
+  {
+    schema: {
+      body: {
+        type: "object",
+        required: ["direction", "playerName"],
+        properties: {
+          direction: { type: "string" },
+          playerName: { type: "string" },
+        },
+      },
+    },
+  },
+  async (req) => {
+    let game = getGame(req.params.id);
+    game = shift(game, req.body.direction, req.body.playerName);
+    game = nextPlayer(game);
+    game = addNumber(game);
+    await storeGame(req.params.id, game);
+    return { ok: true };
+  }
+);
 
 // Any other route, return index.html (supporting history api)
-app.get("*", (_, res, next) => {
-  res.sendFile(resolve(DIST_PATH, "index.html"), next);
+app.setNotFoundHandler((_, res) => {
+  res.sendFile("index.html");
 });
 
-app.listen(PORT).on("listening", () => {
-  console.log(`Listening on port http://127.0.0.1:${PORT}`);
+app.listen({ port: PORT, host: "0.0.0.0" }, (err, address) => {
+  if (err) {
+    throw err;
+  } else {
+    console.log(`Listening on port ${address}`);
+  }
 });

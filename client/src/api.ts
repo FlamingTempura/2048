@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Direction, Game } from "../../common/types";
+import { CreateGameBody, ShiftBoardBody } from "../../server/src/server";
 import { PlayerContext } from "./PlayerContext";
 
 export function usePollGameQuery(id: string) {
@@ -12,10 +13,9 @@ export function usePollGameQuery(id: string) {
 }
 
 type CreateGameResponse = { id: string };
-type CreateGameInput = { hostPlayerName: string; size: number };
 
 export function useCreateGameMutation() {
-  return useMutation<CreateGameResponse, unknown, CreateGameInput>({
+  return useMutation<CreateGameResponse, unknown, CreateGameBody>({
     mutationKey: ["create-game"],
     mutationFn: (data) =>
       apiRequest<CreateGameResponse>("POST", "/api/game", data),
@@ -47,9 +47,11 @@ export function useStartGameMutation(gameId: string) {
 
 export function useMoveMutation(gameId: string) {
   const queryClient = useQueryClient();
+  const { playerName } = useContext(PlayerContext);
   return useMutation<undefined, unknown, { direction: Direction }>({
     mutationKey: ["move"],
-    mutationFn: (data) => apiRequest("POST", `/api/game/${gameId}/move`, data),
+    mutationFn: ({ direction }) =>
+      apiRequest("POST", `/api/game/${gameId}/move`, { direction, playerName }),
     onSuccess: () => queryClient.invalidateQueries(["game", gameId]),
   });
 }
