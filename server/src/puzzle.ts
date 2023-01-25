@@ -176,7 +176,7 @@ export function kickPlayer(game: Game, playerName: string): Game {
         ...game.players.slice(index + 1),
       ],
       activePlayerIndex:
-        game.activePlayerIndex > index
+        game.activePlayerIndex >= index
           ? game.activePlayerIndex - 1
           : game.activePlayerIndex,
     };
