@@ -28255,6 +28255,7 @@
   function StartScreen() {
     const nav = useNavigate();
     const playerCtx = (0, import_react5.useContext)(PlayerContext);
+    const [size, setSize] = (0, import_react5.useState)(6);
     const createGameMutation = useMutation({
       mutationKey: ["create-game"],
       mutationFn: async (data) => {
@@ -28271,7 +28272,8 @@
     });
     async function handleStart() {
       const res = await createGameMutation.mutateAsync({
-        hostPlayerName: playerCtx.playerName
+        hostPlayerName: playerCtx.playerName,
+        size
       });
       nav(`/game/${res.id}`);
     }
@@ -28282,7 +28284,14 @@
         value: playerCtx.playerName,
         onChange: (e2) => playerCtx.setPlayerName(e2.currentTarget.value)
       }
-    )), createGameMutation.status === "loading" ? /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, "Loading...") : /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement("h2", null, "Create game"), /* @__PURE__ */ import_react5.default.createElement("button", { onClick: handleStart }, "Start"), createGameMutation.status === "error" ? /* @__PURE__ */ import_react5.default.createElement("p", null, String(createGameMutation.error)) : null));
+    )), createGameMutation.status === "loading" ? /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, "Loading...") : /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement("h2", null, "Create game"), /* @__PURE__ */ import_react5.default.createElement("label", null, "Size", " ", /* @__PURE__ */ import_react5.default.createElement(
+      "input",
+      {
+        type: "number",
+        value: size,
+        onChange: (e2) => setSize(e2.currentTarget.valueAsNumber)
+      }
+    )), /* @__PURE__ */ import_react5.default.createElement("button", { onClick: handleStart }, "Start"), createGameMutation.status === "error" ? /* @__PURE__ */ import_react5.default.createElement("p", null, String(createGameMutation.error)) : null));
   }
 
   // client/src/GameScreen.tsx

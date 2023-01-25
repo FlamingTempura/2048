@@ -7,7 +7,6 @@ import { addNumber, emptyBoard, shift } from "../../common/puzzle";
 import { Game } from "../../common/types";
 
 const PORT = 8090;
-const DEFAULT_GRID_SIZE = 6;
 
 const DIST_PATH = resolve(__dirname, "../../client/dist");
 
@@ -16,15 +15,16 @@ const app = express();
 app.use(express.json());
 app.use(express.static(DIST_PATH));
 
-// Expects { hostPlayerName: string }
+// Expects { hostPlayerName: string, size: number }
 app.post("/api/game", async (req, res, next) => {
   if (
     typeof req.body.hostPlayerName !== "string" &&
     req.body.hostPlayerName !== ""
+    // TODO: check size number
   ) {
     next(new Error("Expected host player name"));
   } else {
-    res.json({ id: await startGame(req.body.hostPlayerName) });
+    res.json({ id: await startGame(req.body.hostPlayerName, req.body.size) });
   }
 });
 
@@ -109,14 +109,16 @@ app.listen(PORT).on("listening", () => {
 
 console.log(readdirSync("./client/dist"));
 
-async function startGame(hostPlayerName: string): Promise<string> {
+async function startGame(
+  hostPlayerName: string,
+  size: number
+): Promise<string> {
   const id = randomUUID();
-  const size = DEFAULT_GRID_SIZE; // Could be customizable by user in future;
   games[id] = {
     players: [{ name: hostPlayerName, score: 0 }],
     activePlayerIndex: 0,
     size,
-    board: emptyBoard(DEFAULT_GRID_SIZE),
+    board: emptyBoard(size),
     state: "LOBBY",
   };
   addNumber(games[id]);

@@ -23817,7 +23817,6 @@ function emptyBoard(size) {
 
 // server/src/server.ts
 var PORT = 8090;
-var DEFAULT_GRID_SIZE = 6;
 var DIST_PATH = (0, import_path.resolve)(__dirname, "../../client/dist");
 var app = (0, import_express.default)();
 app.use(import_express.default.json());
@@ -23826,7 +23825,7 @@ app.post("/api/game", async (req, res, next) => {
   if (typeof req.body.hostPlayerName !== "string" && req.body.hostPlayerName !== "") {
     next(new Error("Expected host player name"));
   } else {
-    res.json({ id: await startGame(req.body.hostPlayerName) });
+    res.json({ id: await startGame(req.body.hostPlayerName, req.body.size) });
   }
 });
 app.get("/api/game/:id", (req, res, next) => {
@@ -23897,14 +23896,13 @@ app.listen(PORT).on("listening", () => {
   console.log(`Listening on port http://127.0.0.1:${PORT}`);
 });
 console.log((0, import_fs.readdirSync)("./client/dist"));
-async function startGame(hostPlayerName) {
+async function startGame(hostPlayerName, size) {
   const id = (0, import_crypto.randomUUID)();
-  const size = DEFAULT_GRID_SIZE;
   games[id] = {
     players: [{ name: hostPlayerName, score: 0 }],
     activePlayerIndex: 0,
     size,
-    board: emptyBoard(DEFAULT_GRID_SIZE),
+    board: emptyBoard(size),
     state: "LOBBY"
   };
   addNumber(games[id]);

@@ -353,5 +353,42 @@
       ]
     ],
     "state": "STARTED"
+  },
+  "f83f4f25-5a77-488d-b2ed-c93e45e1b160": {
+    "players": [
+      {
+        "name": "gob",
+        "score": 216
+      }
+    ],
+    "activePlayerIndex": 0,
+    "size": 4,
+    "board": [
+      [
+        2,
+        2,
+        2,
+        2
+      ],
+      [
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        8,
+        8,
+        8,
+        8
+      ],
+      [
+        16,
+        16,
+        2,
+        16
+      ]
+    ],
+    "state": "STARTED"
   }
 }

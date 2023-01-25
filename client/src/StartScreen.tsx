@@ -6,11 +6,12 @@ import { PlayerContext } from "./App";
 export function StartScreen() {
   const nav = useNavigate();
   const playerCtx = useContext(PlayerContext);
+  const [size, setSize] = useState(6);
 
   const createGameMutation = useMutation<
     { id: string },
     unknown,
-    { hostPlayerName: string }
+    { hostPlayerName: string; size: number }
   >({
     mutationKey: ["create-game"],
     mutationFn: async (data) => {
@@ -29,6 +30,7 @@ export function StartScreen() {
   async function handleStart() {
     const res = await createGameMutation.mutateAsync({
       hostPlayerName: playerCtx.playerName,
+      size,
     });
     nav(`/game/${res.id}`);
   }
@@ -49,6 +51,14 @@ export function StartScreen() {
       ) : (
         <>
           <h2>Create game</h2>
+          <label>
+            Size{" "}
+            <input
+              type="number"
+              value={size}
+              onChange={(e) => setSize(e.currentTarget.valueAsNumber)}
+            />
+          </label>
           <button onClick={handleStart}>Start</button>
           {createGameMutation.status === "error" ? (
             <p>{String(createGameMutation.error)}</p>
