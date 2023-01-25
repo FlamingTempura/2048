@@ -9,10 +9,11 @@ import {
   nextPlayer,
   shift,
   startGame,
-} from "../../common/puzzle";
-import { Direction } from "../../common/types";
+} from "./puzzle";
+import { Direction, Game } from "../../common/types";
 import { getGame, storeGame } from "./store";
 import fastifyStatic from "@fastify/static";
+import websocket, { SocketStream } from "@fastify/websocket";
 
 const PORT = 8090;
 const DIST_PATH = resolve(__dirname, "../../client/dist");
@@ -20,6 +21,36 @@ const DIST_PATH = resolve(__dirname, "../../client/dist");
 const app = fastify();
 
 app.register(fastifyStatic, { root: DIST_PATH });
+app.register(websocket);
+
+// Websocket to subscribe to game event changes
+//
+// On a change to the game (see updateGameSubscribers), the entire game object
+// is sent to all subscribers. I suppose we could just send a change description
+// to keep frames smaller (e.g. "moved left"), but sending the entire game
+// object keeps things simple. And the game object is never going to be huge.
+app.register(async (fastify) => {
+  fastify.get<{ Params: { id: string } }>(
+    "/api/game/:id/subscribe",
+    { websocket: true },
+    (connection, req) => {
+      const gameId = req.params.id;
+      const subs = gameSubscribers.get(gameId) ?? new Set();
+      subs.add(connection);
+      gameSubscribers.set(gameId, subs);
+      connection.socket.on("close", () => subs.delete(connection));
+    }
+  );
+});
+
+const gameSubscribers = new Map<string, Set<SocketStream>>();
+
+function updateGameSubscribers(id: string, game: Game): void {
+  const subscribers = gameSubscribers.get(id) ?? new Set();
+  for (const sub of subscribers) {
+    sub.socket.send(JSON.stringify(game));
+  }
+}
 
 // Create game
 export type CreateGameBody = { hostPlayerName: string; size: number };
@@ -41,7 +72,7 @@ app.post<{ Body: CreateGameBody }>(
     const id = randomUUID();
     let game = createGame(req.body.size);
     game = addPlayer(game, req.body.hostPlayerName);
-    game = addNumber(game);
+    game = addNumber(game, 2);
     await storeGame(id, game);
     return { id };
   }
@@ -65,10 +96,11 @@ app.put<{ Params: { id: string } }>(
       },
     },
   },
-  (req) => {
+  async (req) => {
     let game = getGame(req.params.id);
     game = startGame(game);
-    storeGame(req.params.id, game);
+    await storeGame(req.params.id, game);
+    updateGameSubscribers(req.params.id, game);
     return { ok: true };
   }
 );
@@ -90,6 +122,7 @@ app.post<{ Params: { id: string }; Body: JoinGameBody }>(
     let game = getGame(req.params.id);
     game = addPlayer(game, req.body.playerName);
     await storeGame(req.params.id, game);
+    updateGameSubscribers(req.params.id, game);
     return { ok: true };
   }
 );
@@ -101,6 +134,7 @@ app.delete<{ Params: { id: string; name: string } }>(
     let game = getGame(req.params.id);
     game = kickPlayer(game, req.params.name);
     await storeGame(req.params.id, game);
+    updateGameSubscribers(req.params.id, game);
     return { ok: true };
   }
 );
@@ -126,8 +160,9 @@ app.post<{ Params: { id: string }; Body: ShiftBoardBody }>(
     let game = getGame(req.params.id);
     game = shift(game, req.body.direction, req.body.playerName);
     game = nextPlayer(game);
-    game = addNumber(game);
+    game = addNumber(game, 1);
     await storeGame(req.params.id, game);
+    updateGameSubscribers(req.params.id, game);
     return { ok: true };
   }
 );

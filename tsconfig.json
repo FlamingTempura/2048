@@ -1,7 +1,11 @@
 {
     "compilerOptions": {
         "esModuleInterop": true,
-        "jsx": "react"
+        "jsx": "react",
+        "lib": ["ESNext", "DOM"],
+        "target": "ES2015",
+        "moduleResolution": "node",
+        "strict": true
     },
     "include": ["build.ts", "server/src/**/*", "client/src/**/*", "common/**/*", "node_modules/**/*", "common/**/*"]
 }

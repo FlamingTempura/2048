@@ -1,14 +1,14 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { GameWithId } from "../../common/types";
-import { usePollGameQuery } from "./api";
+import { useGameSubscription } from "./api";
 import { GameBoard } from "./GameBoard";
 import { LobbyScreen } from "./Lobby";
 
 export function GameScreen() {
   const { id } = useParams();
 
-  const gameQuery = usePollGameQuery(id);
+  const gameQuery = useGameSubscription(id!);
 
   if (gameQuery.status === "loading" || gameQuery.status === "idle") {
     return <p>Loading...</p>;
@@ -18,7 +18,7 @@ export function GameScreen() {
     return <p>Error! {String(gameQuery.error)}</p>;
   }
 
-  const game: GameWithId = { ...gameQuery.data, id };
+  const game: GameWithId = { ...gameQuery.data, id: id! };
 
   switch (gameQuery.data.state) {
     case "LOBBY":

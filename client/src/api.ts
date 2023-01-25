@@ -1,15 +1,35 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Direction, Game } from "../../common/types";
-import { CreateGameBody, ShiftBoardBody } from "../../server/src/server";
+import { CreateGameBody } from "../../server/src/server";
 import { PlayerContext } from "./PlayerContext";
 
-export function usePollGameQuery(id: string) {
-  return useQuery<undefined, unknown, Game>({
+/**
+ * Fetches the specified game and subscribes to a websocket.
+ */
+export function useGameSubscription(id: string) {
+  const res = useQuery<undefined, unknown, Game>({
     queryKey: ["game", id],
     queryFn: () => apiRequest("GET", `/api/game/${id}`),
-    refetchInterval: 1000,
   });
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const websocket = new WebSocket(
+      `ws://${location.host}/api/game/${id}/subscribe`
+    );
+    websocket.addEventListener("error", (err) => {
+      console.error("socket error", err);
+    });
+    websocket.addEventListener("message", (event) => {
+      // Update the cache data stored by react-query. This will update the UI
+      queryClient.setQueriesData(["game", id], JSON.parse(event.data));
+    });
+    return () => websocket.close();
+  }, [queryClient]);
+
+  return res;
 }
 
 type CreateGameResponse = { id: string };
@@ -23,47 +43,37 @@ export function useCreateGameMutation() {
 }
 
 export function useJoinGameMutation(gameId: string) {
-  const queryClient = useQueryClient();
   const { playerName } = useContext(PlayerContext);
 
   return useMutation<undefined, unknown, void>({
     mutationKey: ["join"],
     mutationFn: () =>
       apiRequest("POST", `/api/game/${gameId}/player`, { playerName }),
-    onSuccess: () => queryClient.invalidateQueries(["game", gameId]),
   });
 }
 
 export function useStartGameMutation(gameId: string) {
-  const queryClient = useQueryClient();
-
   return useMutation<undefined, unknown, void>({
     mutationKey: ["start"],
     mutationFn: () =>
       apiRequest("PUT", `/api/game/${gameId}`, { state: "STARTED" }),
-    onSuccess: () => queryClient.invalidateQueries(["game", gameId]),
   });
 }
 
 export function useMoveMutation(gameId: string) {
-  const queryClient = useQueryClient();
   const { playerName } = useContext(PlayerContext);
   return useMutation<undefined, unknown, { direction: Direction }>({
     mutationKey: ["move"],
     mutationFn: ({ direction }) =>
       apiRequest("POST", `/api/game/${gameId}/move`, { direction, playerName }),
-    onSuccess: () => queryClient.invalidateQueries(["game", gameId]),
   });
 }
 
 export function useKickMutation(gameId: string) {
-  const queryClient = useQueryClient();
-
   return useMutation<undefined, unknown, { playerName: string }>({
     mutationKey: ["kick"],
     mutationFn: (data) =>
       apiRequest("DELETE", `/api/game/${gameId}/player/${data.playerName}`),
-    onSuccess: () => queryClient.invalidateQueries(["game", gameId]),
   });
 }
 
@@ -78,6 +88,7 @@ async function apiRequest<ResponseData>(
     headers: { "content-type": "application/json" },
   });
   if (res.status > 399) {
+    // TODO: better error handling, we're throwing away the server error here D:
     throw new Error("Unexpected response status");
   }
   return res.json();

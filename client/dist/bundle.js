@@ -1,10 +1,28 @@
+"use strict";
 (() => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
+  var __defProps = Object.defineProperties;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
   var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __spreadValues = (a2, b2) => {
+    for (var prop in b2 ||= {})
+      if (__hasOwnProp.call(b2, prop))
+        __defNormalProp(a2, prop, b2[prop]);
+    if (__getOwnPropSymbols)
+      for (var prop of __getOwnPropSymbols(b2)) {
+        if (__propIsEnum.call(b2, prop))
+          __defNormalProp(a2, prop, b2[prop]);
+      }
+    return a2;
+  };
+  var __spreadProps = (a2, b2) => __defProps(a2, __getOwnPropDescs(b2));
   var __commonJS = (cb, mod) => function __require() {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
@@ -24,6 +42,26 @@
     isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
     mod
   ));
+  var __async = (__this, __arguments, generator) => {
+    return new Promise((resolve, reject) => {
+      var fulfilled = (value) => {
+        try {
+          step(generator.next(value));
+        } catch (e2) {
+          reject(e2);
+        }
+      };
+      var rejected = (value) => {
+        try {
+          step(generator.throw(value));
+        } catch (e2) {
+          reject(e2);
+        }
+      };
+      var step = (x2) => x2.done ? resolve(x2.value) : Promise.resolve(x2.value).then(fulfilled, rejected);
+      step((generator = generator.apply(__this, __arguments)).next());
+    });
+  };
 
   // node_modules/react/cjs/react.development.js
   var require_react_development = __commonJS({
@@ -1096,7 +1134,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect6(create, deps) {
+          function useEffect7(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1403,7 +1441,7 @@
               }
             }
           }
-          function checkPropTypes(typeSpecs, values, location, componentName, element) {
+          function checkPropTypes(typeSpecs, values, location2, componentName, element) {
             {
               var has = Function.call.bind(hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
@@ -1411,23 +1449,23 @@
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
-                      var err = Error((componentName || "React class") + ": " + location + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
+                      var err = Error((componentName || "React class") + ": " + location2 + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
                       err.name = "Invariant Violation";
                       throw err;
                     }
-                    error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+                    error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location2, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
                   } catch (ex) {
                     error$1 = ex;
                   }
                   if (error$1 && !(error$1 instanceof Error)) {
                     setCurrentlyValidatingElement(element);
-                    error("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || "React class", location, typeSpecName, typeof error$1);
+                    error("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || "React class", location2, typeSpecName, typeof error$1);
                     setCurrentlyValidatingElement(null);
                   }
                   if (error$1 instanceof Error && !(error$1.message in loggedTypeFailures)) {
                     loggedTypeFailures[error$1.message] = true;
                     setCurrentlyValidatingElement(element);
-                    error("Failed %s type: %s", location, error$1.message);
+                    error("Failed %s type: %s", location2, error$1.message);
                     setCurrentlyValidatingElement(null);
                   }
                 }
@@ -1878,7 +1916,7 @@
           exports.useContext = useContext8;
           exports.useDebugValue = useDebugValue2;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect6;
+          exports.useEffect = useEffect7;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
@@ -2382,9 +2420,9 @@
           if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
             __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
           }
-          var React14 = require_react();
+          var React15 = require_react();
           var Scheduler = require_scheduler();
-          var ReactSharedInternals = React14.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React15.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           var suppressWarning = false;
           function setSuppressWarning(newSuppressWarning) {
             {
@@ -2433,7 +2471,7 @@
           var HostPortal = 4;
           var HostComponent = 5;
           var HostText = 6;
-          var Fragment3 = 7;
+          var Fragment4 = 7;
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
@@ -3589,7 +3627,7 @@
                 return "DehydratedFragment";
               case ForwardRef:
                 return getWrappedName$1(type, type.render, "ForwardRef");
-              case Fragment3:
+              case Fragment4:
                 return "Fragment";
               case HostComponent:
                 return type;
@@ -3989,7 +4027,7 @@
             {
               if (props.value == null) {
                 if (typeof props.children === "object" && props.children !== null) {
-                  React14.Children.forEach(props.children, function(child) {
+                  React15.Children.forEach(props.children, function(child) {
                     if (child == null) {
                       return;
                     }
@@ -10773,7 +10811,7 @@
               }
             }
           }
-          function checkPropTypes(typeSpecs, values, location, componentName, element) {
+          function checkPropTypes(typeSpecs, values, location2, componentName, element) {
             {
               var has2 = Function.call.bind(hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
@@ -10781,23 +10819,23 @@
                   var error$1 = void 0;
                   try {
                     if (typeof typeSpecs[typeSpecName] !== "function") {
-                      var err = Error((componentName || "React class") + ": " + location + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
+                      var err = Error((componentName || "React class") + ": " + location2 + " type `" + typeSpecName + "` is invalid; it must be a function, usually from the `prop-types` package, but received `" + typeof typeSpecs[typeSpecName] + "`.This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.");
                       err.name = "Invariant Violation";
                       throw err;
                     }
-                    error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+                    error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location2, null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
                   } catch (ex) {
                     error$1 = ex;
                   }
                   if (error$1 && !(error$1 instanceof Error)) {
                     setCurrentlyValidatingElement(element);
-                    error("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || "React class", location, typeSpecName, typeof error$1);
+                    error("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || "React class", location2, typeSpecName, typeof error$1);
                     setCurrentlyValidatingElement(null);
                   }
                   if (error$1 instanceof Error && !(error$1.message in loggedTypeFailures)) {
                     loggedTypeFailures[error$1.message] = true;
                     setCurrentlyValidatingElement(element);
-                    error("Failed %s type: %s", location, error$1.message);
+                    error("Failed %s type: %s", location2, error$1.message);
                     setCurrentlyValidatingElement(null);
                   }
                 }
@@ -12436,7 +12474,7 @@
             }
           }
           var fakeInternalInstance = {};
-          var emptyRefsObject = new React14.Component().refs;
+          var emptyRefsObject = new React15.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -13260,7 +13298,7 @@
               }
             }
             function updateFragment2(returnFiber, current2, fragment, lanes, key) {
-              if (current2 === null || current2.tag !== Fragment3) {
+              if (current2 === null || current2.tag !== Fragment4) {
                 var created = createFiberFromFragment(fragment, returnFiber.mode, lanes, key);
                 created.return = returnFiber;
                 return created;
@@ -13663,7 +13701,7 @@
                 if (child.key === key) {
                   var elementType = element.type;
                   if (elementType === REACT_FRAGMENT_TYPE) {
-                    if (child.tag === Fragment3) {
+                    if (child.tag === Fragment4) {
                       deleteRemainingChildren(returnFiber, child.sibling);
                       var existing = useFiber(child, element.props.children);
                       existing.return = returnFiber;
@@ -17838,7 +17876,7 @@
                 var _resolvedProps2 = workInProgress2.elementType === type ? _unresolvedProps2 : resolveDefaultProps(type, _unresolvedProps2);
                 return updateForwardRef(current2, workInProgress2, type, _resolvedProps2, renderLanes2);
               }
-              case Fragment3:
+              case Fragment4:
                 return updateFragment(current2, workInProgress2, renderLanes2);
               case Mode:
                 return updateMode(current2, workInProgress2, renderLanes2);
@@ -18111,7 +18149,7 @@
               case SimpleMemoComponent:
               case FunctionComponent:
               case ForwardRef:
-              case Fragment3:
+              case Fragment4:
               case Mode:
               case Profiler:
               case ContextConsumer:
@@ -22370,7 +22408,7 @@
             return fiber;
           }
           function createFiberFromFragment(elements, mode, lanes, key) {
-            var fiber = createFiber(Fragment3, elements, key, mode);
+            var fiber = createFiber(Fragment4, elements, key, mode);
             fiber.lanes = lanes;
             return fiber;
           }
@@ -23592,7 +23630,7 @@
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
           var ForwardRef = REACT_FORWARD_REF_TYPE;
-          var Fragment3 = REACT_FRAGMENT_TYPE;
+          var Fragment4 = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
           var Portal = REACT_PORTAL_TYPE;
@@ -23660,7 +23698,7 @@
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
           exports.ForwardRef = ForwardRef;
-          exports.Fragment = Fragment3;
+          exports.Fragment = Fragment4;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
           exports.Portal = Portal;
@@ -23807,7 +23845,7 @@
           var ContextProvider = REACT_PROVIDER_TYPE;
           var Element = REACT_ELEMENT_TYPE;
           var ForwardRef = REACT_FORWARD_REF_TYPE;
-          var Fragment3 = REACT_FRAGMENT_TYPE;
+          var Fragment4 = REACT_FRAGMENT_TYPE;
           var Lazy = REACT_LAZY_TYPE;
           var Memo = REACT_MEMO_TYPE;
           var Portal = REACT_PORTAL_TYPE;
@@ -23866,7 +23904,7 @@
           exports.ContextProvider = ContextProvider;
           exports.Element = Element;
           exports.ForwardRef = ForwardRef;
-          exports.Fragment = Fragment3;
+          exports.Fragment = Fragment4;
           exports.Lazy = Lazy;
           exports.Memo = Memo;
           exports.Portal = Portal;
@@ -23994,7 +24032,7 @@
   });
 
   // client/src/App.tsx
-  var import_react13 = __toESM(require_react());
+  var import_react14 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
   // node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js
@@ -26497,7 +26535,7 @@
   }
 
   // client/src/StartScreen.tsx
-  var import_react7 = __toESM(require_react());
+  var import_react8 = __toESM(require_react());
 
   // node_modules/react-router-dom/dist/index.js
   var React6 = __toESM(require_react());
@@ -26569,10 +26607,10 @@
   function createKey() {
     return Math.random().toString(36).substr(2, 8);
   }
-  function getHistoryState(location, index) {
+  function getHistoryState(location2, index) {
     return {
-      usr: location.state,
-      key: location.key,
+      usr: location2.state,
+      key: location2.key,
       idx: index
     };
   }
@@ -26580,7 +26618,7 @@
     if (state === void 0) {
       state = null;
     }
-    let location = _extends2({
+    let location2 = _extends2({
       pathname: typeof current === "string" ? current : current.pathname,
       search: "",
       hash: ""
@@ -26592,7 +26630,7 @@
       // keep as is for the time being and just let any incoming keys take precedence
       key: to && to.key || key || createKey()
     });
-    return location;
+    return location2;
   }
   function createPath(_ref) {
     let {
@@ -26675,12 +26713,12 @@
     }
     function push(to, state) {
       action = Action.Push;
-      let location = createLocation(history.location, to, state);
+      let location2 = createLocation(history.location, to, state);
       if (validateLocation)
-        validateLocation(location, to);
+        validateLocation(location2, to);
       index = getIndex() + 1;
-      let historyState = getHistoryState(location, index);
-      let url = history.createHref(location);
+      let historyState = getHistoryState(location2, index);
+      let url = history.createHref(location2);
       try {
         globalHistory.pushState(historyState, "", url);
       } catch (error) {
@@ -26696,12 +26734,12 @@
     }
     function replace(to, state) {
       action = Action.Replace;
-      let location = createLocation(history.location, to, state);
+      let location2 = createLocation(history.location, to, state);
       if (validateLocation)
-        validateLocation(location, to);
+        validateLocation(location2, to);
       index = getIndex();
-      let historyState = getHistoryState(location, index);
-      let url = history.createHref(location);
+      let historyState = getHistoryState(location2, index);
+      let url = history.createHref(location2);
       globalHistory.replaceState(historyState, "", url);
       if (v5Compat && listener) {
         listener({
@@ -26766,8 +26804,8 @@
     if (basename === void 0) {
       basename = "/";
     }
-    let location = typeof locationArg === "string" ? parsePath(locationArg) : locationArg;
-    let pathname = stripBasename(location.pathname || "/", basename);
+    let location2 = typeof locationArg === "string" ? parsePath(locationArg) : locationArg;
+    let pathname = stripBasename(location2.pathname || "/", basename);
     if (pathname == null) {
       return null;
     }
@@ -27384,23 +27422,23 @@
 ` + ('Please change the parent <Route path="' + parentPath + '"> to <Route ') + ('path="' + (parentPath === "/" ? "*" : parentPath + "/*") + '">.'));
     }
     let locationFromContext = useLocation();
-    let location;
+    let location2;
     if (locationArg) {
       var _parsedLocationArg$pa;
       let parsedLocationArg = typeof locationArg === "string" ? parsePath(locationArg) : locationArg;
       !(parentPathnameBase === "/" || ((_parsedLocationArg$pa = parsedLocationArg.pathname) == null ? void 0 : _parsedLocationArg$pa.startsWith(parentPathnameBase))) ? true ? invariant(false, "When overriding the location using `<Routes location>` or `useRoutes(routes, location)`, the location pathname must begin with the portion of the URL pathname that was " + ('matched by all parent routes. The current pathname base is "' + parentPathnameBase + '" ') + ('but pathname "' + parsedLocationArg.pathname + '" was given in the `location` prop.')) : invariant(false) : void 0;
-      location = parsedLocationArg;
+      location2 = parsedLocationArg;
     } else {
-      location = locationFromContext;
+      location2 = locationFromContext;
     }
-    let pathname = location.pathname || "/";
+    let pathname = location2.pathname || "/";
     let remainingPathname = parentPathnameBase === "/" ? pathname : pathname.slice(parentPathnameBase.length) || "/";
     let matches = matchRoutes(routes, {
       pathname: remainingPathname
     });
     if (true) {
-      true ? warning(parentRoute || matches != null, 'No routes matched location "' + location.pathname + location.search + location.hash + '" ') : void 0;
-      true ? warning(matches == null || matches[matches.length - 1].route.element !== void 0, 'Matched leaf route at location "' + location.pathname + location.search + location.hash + '" does not have an element. This means it will render an <Outlet /> with a null value by default resulting in an "empty" page.') : void 0;
+      true ? warning(parentRoute || matches != null, 'No routes matched location "' + location2.pathname + location2.search + location2.hash + '" ') : void 0;
+      true ? warning(matches == null || matches[matches.length - 1].route.element !== void 0, 'Matched leaf route at location "' + location2.pathname + location2.search + location2.hash + '" does not have an element. This means it will render an <Outlet /> with a null value by default resulting in an "empty" page.') : void 0;
     }
     let renderedMatches = _renderMatches(matches && matches.map((match) => Object.assign({}, match, {
       params: Object.assign({}, parentParams, match.params),
@@ -27424,7 +27462,7 @@
             hash: "",
             state: null,
             key: "default"
-          }, location),
+          }, location2),
           navigationType: Action.Pop
         }
       }, renderedMatches);
@@ -27651,7 +27689,7 @@
       state = null,
       key = "default"
     } = locationProp;
-    let location = React5.useMemo(() => {
+    let location2 = React5.useMemo(() => {
       let trailingPathname = stripBasename(pathname, basename);
       if (trailingPathname == null) {
         return null;
@@ -27664,8 +27702,8 @@
         key
       };
     }, [basename, pathname, search, hash, state, key]);
-    true ? warning(location != null, '<Router basename="' + basename + '"> is not able to match the URL ' + ('"' + pathname + search + hash + '" because it does not start with the ') + "basename, so the <Router> won't render anything.") : void 0;
-    if (location == null) {
+    true ? warning(location2 != null, '<Router basename="' + basename + '"> is not able to match the URL ' + ('"' + pathname + search + hash + '" because it does not start with the ') + "basename, so the <Router> won't render anything.") : void 0;
+    if (location2 == null) {
       return null;
     }
     return /* @__PURE__ */ React5.createElement(NavigationContext.Provider, {
@@ -27673,7 +27711,7 @@
     }, /* @__PURE__ */ React5.createElement(LocationContext.Provider, {
       children,
       value: {
-        location,
+        location: location2,
         navigationType
       }
     }));
@@ -27681,11 +27719,11 @@
   function Routes(_ref5) {
     let {
       children,
-      location
+      location: location2
     } = _ref5;
     let dataRouterContext = React5.useContext(DataRouterContext);
     let routes = dataRouterContext && !children ? dataRouterContext.router.routes : createRoutesFromChildren(children);
-    return useRoutes(routes, location);
+    return useRoutes(routes, location2);
   }
   var AwaitRenderStatus;
   (function(AwaitRenderStatus2) {
@@ -27948,13 +27986,13 @@
     let path = useResolvedPath(to, {
       relative: rest.relative
     });
-    let location = useLocation();
+    let location2 = useLocation();
     let routerState = React6.useContext(DataRouterStateContext);
     let {
       navigator: navigator2
     } = React6.useContext(NavigationContext);
     let toPathname = navigator2.encodeLocation ? navigator2.encodeLocation(path).pathname : path.pathname;
-    let locationPathname = location.pathname;
+    let locationPathname = location2.pathname;
     let nextLocationPathname = routerState && routerState.navigation && routerState.navigation.location ? routerState.navigation.location.pathname : null;
     if (!caseSensitive) {
       locationPathname = locationPathname.toLowerCase();
@@ -28087,14 +28125,14 @@
       relative
     } = _temp === void 0 ? {} : _temp;
     let navigate = useNavigate();
-    let location = useLocation();
+    let location2 = useLocation();
     let path = useResolvedPath(to, {
       relative
     });
     return React6.useCallback((event) => {
       if (shouldProcessLinkClick(event, target)) {
         event.preventDefault();
-        let replace = replaceProp !== void 0 ? replaceProp : createPath(location) === createPath(path);
+        let replace = replaceProp !== void 0 ? replaceProp : createPath(location2) === createPath(path);
         navigate(to, {
           replace,
           state,
@@ -28102,7 +28140,7 @@
           relative
         });
       }
-    }, [location, navigate, path, replaceProp, state, target, to, preventScrollReset, relative]);
+    }, [location2, navigate, path, replaceProp, state, target, to, preventScrollReset, relative]);
   }
   function useSubmitImpl(fetcherKey, routeId) {
     let {
@@ -28151,10 +28189,10 @@
     let path = _extends4({}, useResolvedPath(action ? action : ".", {
       relative
     }));
-    let location = useLocation();
+    let location2 = useLocation();
     if (action == null) {
-      path.search = location.search;
-      path.hash = location.hash;
+      path.search = location2.search;
+      path.hash = location2.hash;
       if (match.route.index) {
         let params = new URLSearchParams(path.search);
         params.delete("index");
@@ -28183,7 +28221,7 @@
       restoreScrollPosition,
       preventScrollReset
     } = useDataRouterState2(DataRouterStateHook2.UseScrollRestoration);
-    let location = useLocation();
+    let location2 = useLocation();
     let matches = useMatches();
     let navigation = useNavigation();
     React6.useEffect(() => {
@@ -28194,12 +28232,12 @@
     }, []);
     useBeforeUnload(React6.useCallback(() => {
       if (navigation.state === "idle") {
-        let key = (getKey ? getKey(location, matches) : null) || location.key;
+        let key = (getKey ? getKey(location2, matches) : null) || location2.key;
         savedScrollPositions[key] = window.scrollY;
       }
       sessionStorage.setItem(storageKey || SCROLL_RESTORATION_STORAGE_KEY, JSON.stringify(savedScrollPositions));
       window.history.scrollRestoration = "auto";
-    }, [storageKey, getKey, navigation.state, location, matches]));
+    }, [storageKey, getKey, navigation.state, location2, matches]));
     if (typeof document !== "undefined") {
       React6.useLayoutEffect(() => {
         try {
@@ -28222,8 +28260,8 @@
           window.scrollTo(0, restoreScrollPosition);
           return;
         }
-        if (location.hash) {
-          let el = document.getElementById(location.hash.slice(1));
+        if (location2.hash) {
+          let el = document.getElementById(location2.hash.slice(1));
           if (el) {
             el.scrollIntoView();
             return;
@@ -28233,7 +28271,7 @@
           return;
         }
         window.scrollTo(0, 0);
-      }, [location, restoreScrollPosition, preventScrollReset]);
+      }, [location2, restoreScrollPosition, preventScrollReset]);
     }
   }
   function useBeforeUnload(callback, options) {
@@ -28251,122 +28289,9 @@
     }, [callback, capture]);
   }
 
-  // client/src/api.ts
-  var import_react6 = __toESM(require_react());
-
-  // client/src/PlayerContext.tsx
-  var import_react5 = __toESM(require_react());
-  var LOCAL_STORE_KEY = "2048PlayerName";
-  var PlayerContext = (0, import_react5.createContext)({ playerName: "", setPlayerName: () => void 0 });
-  function PlayerContextProvider({ children }) {
-    const [playerName, setPlayerName] = (0, import_react5.useState)(
-      localStorage.getItem(LOCAL_STORE_KEY) ?? ""
-    );
-    (0, import_react5.useEffect)(() => {
-      localStorage.setItem(LOCAL_STORE_KEY, playerName);
-    }, [playerName]);
-    return /* @__PURE__ */ import_react5.default.createElement(PlayerContext.Provider, { value: { playerName, setPlayerName } }, children);
-  }
-
-  // client/src/api.ts
-  function usePollGameQuery(id) {
-    return useQuery({
-      queryKey: ["game", id],
-      queryFn: () => apiRequest("GET", `/api/game/${id}`),
-      refetchInterval: 1e3
-    });
-  }
-  function useCreateGameMutation() {
-    return useMutation({
-      mutationKey: ["create-game"],
-      mutationFn: (data) => apiRequest("POST", "/api/game", data)
-    });
-  }
-  function useJoinGameMutation(gameId) {
-    const queryClient = useQueryClient();
-    const { playerName } = (0, import_react6.useContext)(PlayerContext);
-    return useMutation({
-      mutationKey: ["join"],
-      mutationFn: () => apiRequest("POST", `/api/game/${gameId}/player`, { playerName }),
-      onSuccess: () => queryClient.invalidateQueries(["game", gameId])
-    });
-  }
-  function useStartGameMutation(gameId) {
-    const queryClient = useQueryClient();
-    return useMutation({
-      mutationKey: ["start"],
-      mutationFn: () => apiRequest("PUT", `/api/game/${gameId}`, { state: "STARTED" }),
-      onSuccess: () => queryClient.invalidateQueries(["game", gameId])
-    });
-  }
-  function useMoveMutation(gameId) {
-    const queryClient = useQueryClient();
-    const { playerName } = (0, import_react6.useContext)(PlayerContext);
-    return useMutation({
-      mutationKey: ["move"],
-      mutationFn: ({ direction }) => apiRequest("POST", `/api/game/${gameId}/move`, { direction, playerName }),
-      onSuccess: () => queryClient.invalidateQueries(["game", gameId])
-    });
-  }
-  function useKickMutation(gameId) {
-    const queryClient = useQueryClient();
-    return useMutation({
-      mutationKey: ["kick"],
-      mutationFn: (data) => apiRequest("DELETE", `/api/game/${gameId}/player/${data.playerName}`),
-      onSuccess: () => queryClient.invalidateQueries(["game", gameId])
-    });
-  }
-  async function apiRequest(method, url, data) {
-    const res = await fetch(url, {
-      method,
-      body: data ? JSON.stringify(data) : void 0,
-      headers: { "content-type": "application/json" }
-    });
-    if (res.status > 399) {
-      throw new Error("Unexpected response status");
-    }
-    return res.json();
-  }
-
-  // client/src/StartScreen.tsx
-  function StartScreen() {
-    const nav = useNavigate();
-    const { playerName, setPlayerName } = (0, import_react7.useContext)(PlayerContext);
-    const [size, setSize] = (0, import_react7.useState)(6);
-    const createGameMutation = useCreateGameMutation();
-    async function handleStart() {
-      const res = await createGameMutation.mutateAsync({
-        hostPlayerName: playerName,
-        size
-      });
-      nav(`/game/${res.id}`);
-    }
-    return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("label", null, "Your name:", " ", /* @__PURE__ */ import_react7.default.createElement(
-      "input",
-      {
-        type: "string",
-        value: playerName,
-        onChange: (e2) => setPlayerName(e2.currentTarget.value)
-      }
-    )), createGameMutation.status === "loading" ? /* @__PURE__ */ import_react7.default.createElement(import_react7.default.Fragment, null, "Loading...") : /* @__PURE__ */ import_react7.default.createElement(import_react7.default.Fragment, null, /* @__PURE__ */ import_react7.default.createElement("h2", null, "Create game"), /* @__PURE__ */ import_react7.default.createElement("label", null, "Size", " ", /* @__PURE__ */ import_react7.default.createElement(
-      "input",
-      {
-        type: "number",
-        value: size,
-        onChange: (e2) => setSize(e2.currentTarget.valueAsNumber)
-      }
-    )), /* @__PURE__ */ import_react7.default.createElement("button", { onClick: handleStart }, "Start"), createGameMutation.status === "error" ? /* @__PURE__ */ import_react7.default.createElement("p", null, String(createGameMutation.error)) : null));
-  }
-
-  // client/src/GameScreen.tsx
-  var import_react12 = __toESM(require_react());
-
-  // client/src/GameBoard.tsx
-  var import_react10 = __toESM(require_react());
-
   // node_modules/styled-components/dist/styled-components.browser.esm.js
   var import_react_is = __toESM(require_react_is());
-  var import_react8 = __toESM(require_react());
+  var import_react5 = __toESM(require_react());
   var import_shallowequal = __toESM(require_shallowequal());
 
   // node_modules/@emotion/stylis/dist/stylis.browser.esm.js
@@ -29299,27 +29224,27 @@
       return t3.name || j(15), te(e3, t3.name);
     }, 5381).toString() : "", m;
   }
-  var ue = import_react8.default.createContext();
+  var ue = import_react5.default.createContext();
   var le = ue.Consumer;
-  var de = import_react8.default.createContext();
+  var de = import_react5.default.createContext();
   var he = (de.Consumer, new Z());
   var pe = ce();
   function fe() {
-    return (0, import_react8.useContext)(ue) || he;
+    return (0, import_react5.useContext)(ue) || he;
   }
   function me() {
-    return (0, import_react8.useContext)(de) || pe;
+    return (0, import_react5.useContext)(de) || pe;
   }
   function ye(e2) {
-    var t2 = (0, import_react8.useState)(e2.stylisPlugins), n2 = t2[0], s2 = t2[1], c2 = fe(), u2 = (0, import_react8.useMemo)(function() {
+    var t2 = (0, import_react5.useState)(e2.stylisPlugins), n2 = t2[0], s2 = t2[1], c2 = fe(), u2 = (0, import_react5.useMemo)(function() {
       var t3 = c2;
       return e2.sheet ? t3 = e2.sheet : e2.target && (t3 = t3.reconstructWithOptions({ target: e2.target }, false)), e2.disableCSSOMInjection && (t3 = t3.reconstructWithOptions({ useCSSOMInjection: false })), t3;
-    }, [e2.disableCSSOMInjection, e2.sheet, e2.target]), l2 = (0, import_react8.useMemo)(function() {
+    }, [e2.disableCSSOMInjection, e2.sheet, e2.target]), l2 = (0, import_react5.useMemo)(function() {
       return ce({ options: { prefix: !e2.disableVendorPrefixes }, plugins: n2 });
     }, [e2.disableVendorPrefixes, n2]);
-    return (0, import_react8.useEffect)(function() {
+    return (0, import_react5.useEffect)(function() {
       (0, import_shallowequal.default)(n2, e2.stylisPlugins) || s2(e2.stylisPlugins);
-    }, [e2.stylisPlugins]), import_react8.default.createElement(ue.Provider, { value: u2 }, import_react8.default.createElement(de.Provider, { value: l2 }, true ? import_react8.default.Children.only(e2.children) : e2.children));
+    }, [e2.stylisPlugins]), import_react5.default.createElement(ue.Provider, { value: u2 }, import_react5.default.createElement(de.Provider, { value: l2 }, true ? import_react5.default.Children.only(e2.children) : e2.children));
   }
   var ve = function() {
     function e2(e3, t2) {
@@ -29395,7 +29320,7 @@
               s2[i2 - 1] = arguments[i2];
             r2.apply(void 0, [e3].concat(s2));
           }
-        }, (0, import_react8.useRef)(), o2 && !Pe.has(n2) && (console.warn(n2), Pe.add(n2));
+        }, (0, import_react5.useRef)(), o2 && !Pe.has(n2) && (console.warn(n2), Pe.add(n2));
       } catch (e3) {
         Ie.test(e3.message) && Pe.delete(n2);
       } finally {
@@ -29438,7 +29363,7 @@
     }
     return e2;
   }
-  var Ge = import_react8.default.createContext();
+  var Ge = import_react5.default.createContext();
   var Le = Ge.Consumer;
   var Ye = {};
   function qe(e2, t2, n2) {
@@ -29456,7 +29381,7 @@
     var C, I2 = new se(n2, g2, o2 ? e2.componentStyle : void 0), P2 = I2.isStatic && 0 === c2.length, O = function(e3, t3) {
       return function(e4, t4, n3, r2) {
         var o3 = e4.attrs, i3 = e4.componentStyle, a3 = e4.defaultProps, c3 = e4.foldedComponentIds, d3 = e4.shouldForwardProp, h3 = e4.styledComponentId, p2 = e4.target;
-        (0, import_react8.useDebugValue)(h3);
+        (0, import_react5.useDebugValue)(h3);
         var f2 = function(e5, t5, n4) {
           void 0 === e5 && (e5 = E);
           var r3 = v({}, t5, { theme: e5 }), o4 = {};
@@ -29465,16 +29390,16 @@
             for (t6 in b(i4) && (i4 = i4(r3)), i4)
               r3[t6] = o4[t6] = "className" === t6 ? (n5 = o4[t6], s2 = i4[t6], n5 && s2 ? n5 + " " + s2 : n5 || s2) : i4[t6];
           }), [r3, o4];
-        }(Re(t4, (0, import_react8.useContext)(Ge), a3) || E, t4, o3), y2 = f2[0], g3 = f2[1], S3 = function(e5, t5, n4, r3) {
+        }(Re(t4, (0, import_react5.useContext)(Ge), a3) || E, t4, o3), y2 = f2[0], g3 = f2[1], S3 = function(e5, t5, n4, r3) {
           var o4 = fe(), s2 = me(), i4 = t5 ? e5.generateAndInjectStyles(E, o4, s2) : e5.generateAndInjectStyles(n4, o4, s2);
-          return (0, import_react8.useDebugValue)(i4), !t5 && r3 && r3(i4), i4;
+          return (0, import_react5.useDebugValue)(i4), !t5 && r3 && r3(i4), i4;
         }(i3, r2, y2, true ? e4.warnTooManyClasses : void 0), w2 = n3, _2 = g3.$as || t4.$as || g3.as || t4.as || p2, N2 = ke(_2), A3 = g3 !== t4 ? v({}, t4, {}, g3) : t4, C2 = {};
         for (var I3 in A3)
           "$" !== I3[0] && "as" !== I3 && ("forwardedAs" === I3 ? C2.as = A3[I3] : (d3 ? d3(I3, emotion_is_prop_valid_esm_default, _2) : !N2 || emotion_is_prop_valid_esm_default(I3)) && (C2[I3] = A3[I3]));
-        return t4.style && g3.style !== t4.style && (C2.style = v({}, t4.style, {}, g3.style)), C2.className = Array.prototype.concat(c3, h3, S3 !== h3 ? S3 : null, t4.className, g3.className).filter(Boolean).join(" "), C2.ref = w2, (0, import_react8.createElement)(_2, C2);
+        return t4.style && g3.style !== t4.style && (C2.style = v({}, t4.style, {}, g3.style)), C2.className = Array.prototype.concat(c3, h3, S3 !== h3 ? S3 : null, t4.className, g3.className).filter(Boolean).join(" "), C2.ref = w2, (0, import_react5.createElement)(_2, C2);
       }(C, e3, t3, P2);
     };
-    return O.displayName = f, (C = import_react8.default.forwardRef(O)).attrs = S2, C.componentStyle = I2, C.displayName = f, C.shouldForwardProp = A2, C.foldedComponentIds = o2 ? Array.prototype.concat(e2.foldedComponentIds, e2.styledComponentId) : w, C.styledComponentId = g2, C.target = o2 ? e2.target : e2, C.withComponent = function(e3) {
+    return O.displayName = f, (C = import_react5.default.forwardRef(O)).attrs = S2, C.componentStyle = I2, C.displayName = f, C.shouldForwardProp = A2, C.foldedComponentIds = o2 ? Array.prototype.concat(e2.foldedComponentIds, e2.styledComponentId) : w, C.styledComponentId = g2, C.target = o2 ? e2.target : e2, C.withComponent = function(e3) {
       var r2 = t2.componentId, o3 = function(e4, t3) {
         if (null == e4)
           return {};
@@ -29547,14 +29472,14 @@
         if (e3.sealed)
           return j(2);
         var n2 = ((t3 = {})[A] = "", t3["data-styled-version"] = "5.3.6", t3.dangerouslySetInnerHTML = { __html: e3.instance.toString() }, t3), o2 = q();
-        return o2 && (n2.nonce = o2), [import_react8.default.createElement("style", v({}, n2, { key: "sc-0-0" }))];
+        return o2 && (n2.nonce = o2), [import_react5.default.createElement("style", v({}, n2, { key: "sc-0-0" }))];
       }, this.seal = function() {
         e3.sealed = true;
       }, this.instance = new Z({ isServer: true }), this.sealed = false;
     }
     var t2 = e2.prototype;
     return t2.collectStyles = function(e3) {
-      return this.sealed ? j(2) : import_react8.default.createElement(ye, { sheet: this.instance }, e3);
+      return this.sealed ? j(2) : import_react5.default.createElement(ye, { sheet: this.instance }, e3);
     }, t2.interleaveWithNodeStream = function(e3) {
       return j(3);
     }, e2;
@@ -29562,16 +29487,190 @@
   "undefined" != typeof navigator && "ReactNative" === navigator.product && console.warn("It looks like you've imported 'styled-components' on React Native.\nPerhaps you're looking to import 'styled-components/native'?\nRead more about this at https://www.styled-components.com/docs/basics#react-native"), "undefined" != typeof window && (window["__styled-components-init__"] = window["__styled-components-init__"] || 0, 1 === window["__styled-components-init__"] && console.warn("It looks like there are several instances of 'styled-components' initialized in this application. This may cause dynamic styles to not render properly, errors during the rehydration process, a missing theme prop, and makes your application bigger without good reason.\n\nSee https://s-c.sh/2BAXzed for more info."), window["__styled-components-init__"] += 1);
   var styled_components_browser_esm_default = He;
 
-  // client/src/ScoreBoard.tsx
+  // client/src/api.ts
+  var import_react7 = __toESM(require_react());
+
+  // client/src/PlayerContext.tsx
+  var import_react6 = __toESM(require_react());
+  var LOCAL_STORE_KEY = "2048PlayerName";
+  var PlayerContext = (0, import_react6.createContext)({ playerName: "", setPlayerName: () => void 0 });
+  function PlayerContextProvider({ children }) {
+    var _a;
+    const [playerName, setPlayerName] = (0, import_react6.useState)(
+      (_a = localStorage.getItem(LOCAL_STORE_KEY)) != null ? _a : ""
+    );
+    (0, import_react6.useEffect)(() => {
+      localStorage.setItem(LOCAL_STORE_KEY, playerName);
+    }, [playerName]);
+    return /* @__PURE__ */ import_react6.default.createElement(PlayerContext.Provider, { value: { playerName, setPlayerName } }, children);
+  }
+
+  // client/src/api.ts
+  function useGameSubscription(id) {
+    const res = useQuery({
+      queryKey: ["game", id],
+      queryFn: () => apiRequest("GET", `/api/game/${id}`)
+    });
+    const queryClient = useQueryClient();
+    (0, import_react7.useEffect)(() => {
+      const websocket = new WebSocket(
+        `ws://${location.host}/api/game/${id}/subscribe`
+      );
+      websocket.addEventListener("error", (err) => {
+        console.error("socket error", err);
+      });
+      websocket.addEventListener("message", (event) => {
+        queryClient.setQueriesData(["game", id], JSON.parse(event.data));
+      });
+      return () => websocket.close();
+    }, [queryClient]);
+    return res;
+  }
+  function useCreateGameMutation() {
+    return useMutation({
+      mutationKey: ["create-game"],
+      mutationFn: (data) => apiRequest("POST", "/api/game", data)
+    });
+  }
+  function useJoinGameMutation(gameId) {
+    const { playerName } = (0, import_react7.useContext)(PlayerContext);
+    return useMutation({
+      mutationKey: ["join"],
+      mutationFn: () => apiRequest("POST", `/api/game/${gameId}/player`, { playerName })
+    });
+  }
+  function useStartGameMutation(gameId) {
+    return useMutation({
+      mutationKey: ["start"],
+      mutationFn: () => apiRequest("PUT", `/api/game/${gameId}`, { state: "STARTED" })
+    });
+  }
+  function useMoveMutation(gameId) {
+    const { playerName } = (0, import_react7.useContext)(PlayerContext);
+    return useMutation({
+      mutationKey: ["move"],
+      mutationFn: ({ direction }) => apiRequest("POST", `/api/game/${gameId}/move`, { direction, playerName })
+    });
+  }
+  function useKickMutation(gameId) {
+    return useMutation({
+      mutationKey: ["kick"],
+      mutationFn: (data) => apiRequest("DELETE", `/api/game/${gameId}/player/${data.playerName}`)
+    });
+  }
+  function apiRequest(method, url, data) {
+    return __async(this, null, function* () {
+      const res = yield fetch(url, {
+        method,
+        body: data ? JSON.stringify(data) : void 0,
+        headers: { "content-type": "application/json" }
+      });
+      if (res.status > 399) {
+        throw new Error("Unexpected response status");
+      }
+      return res.json();
+    });
+  }
+
+  // client/src/StartScreen.tsx
+  function StartScreen() {
+    const nav = useNavigate();
+    const { playerName, setPlayerName } = (0, import_react8.useContext)(PlayerContext);
+    const [size, setSize] = (0, import_react8.useState)(6);
+    const createGameMutation = useCreateGameMutation();
+    function handleStart() {
+      return __async(this, null, function* () {
+        const res = yield createGameMutation.mutateAsync({
+          hostPlayerName: playerName,
+          size
+        });
+        nav(`/game/${res.id}`);
+      });
+    }
+    return /* @__PURE__ */ import_react8.default.createElement("div", null, createGameMutation.status === "loading" ? /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null, "Loading...") : /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null, /* @__PURE__ */ import_react8.default.createElement("h2", null, "Create game"), /* @__PURE__ */ import_react8.default.createElement(Inputs, null, /* @__PURE__ */ import_react8.default.createElement("label", null, "Your name:"), /* @__PURE__ */ import_react8.default.createElement(
+      "input",
+      {
+        type: "string",
+        value: playerName,
+        onChange: (e2) => setPlayerName(e2.currentTarget.value)
+      }
+    ), /* @__PURE__ */ import_react8.default.createElement("label", null, "Size"), /* @__PURE__ */ import_react8.default.createElement(
+      "input",
+      {
+        type: "number",
+        value: size,
+        onChange: (e2) => setSize(e2.currentTarget.valueAsNumber)
+      }
+    )), /* @__PURE__ */ import_react8.default.createElement(StartButton, { onClick: handleStart }, "Start"), createGameMutation.status === "error" ? /* @__PURE__ */ import_react8.default.createElement("p", null, String(createGameMutation.error)) : null));
+  }
+  var Inputs = styled_components_browser_esm_default.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+`;
+  var StartButton = styled_components_browser_esm_default.button`
+  margin-top: 30px;
+  padding: 12px;
+  width: 100px;
+`;
+
+  // client/src/GameScreen.tsx
+  var import_react13 = __toESM(require_react());
+
+  // client/src/GameBoard.tsx
+  var import_react11 = __toESM(require_react());
+
+  // client/src/GameBoardGrid.tsx
   var import_react9 = __toESM(require_react());
+  function GameBoardGrid({ game }) {
+    return /* @__PURE__ */ import_react9.default.createElement(Grid, { size: game.size }, game.board.map((row, y2) => /* @__PURE__ */ import_react9.default.createElement(import_react9.Fragment, { key: y2 }, row.map((cell, x2) => /* @__PURE__ */ import_react9.default.createElement(Cell, { key: x2, style: { background: getColor(cell) } }, cell)))));
+  }
+  var Grid = styled_components_browser_esm_default.div`
+  display: grid;
+  grid-template-columns: repeat(${(props) => props.size}, 60px);
+  grid-template-rows: repeat(${(props) => props.size}, 60px);
+  gap: 8px;
+`;
+  var Cell = styled_components_browser_esm_default.div`
+  font-size: 22px;
+  text-align: center;
+  font-weight: bold;
+  line-height: 60px;
+  border-radius: 3px;
+  color: white;
+`;
+  function getColor(num) {
+    if (num === 0)
+      return "#89b6a2";
+    const n2 = Math.floor(Math.log2(num));
+    return colors[n2 % colors.length];
+  }
+  var colors = [
+    "#00a99f",
+    "#0192b3",
+    "#036dbd",
+    "#0444c6",
+    "#0617d0",
+    "#2908d9",
+    "#6109e3",
+    "#9d0cec",
+    "#d911f2",
+    "#f11dd4",
+    "#f029a4",
+    "#ef357b"
+  ];
+
+  // client/src/ScoreBoard.tsx
+  var import_react10 = __toESM(require_react());
   function ScoreBoard({
     game,
     allowKick,
     gameEnded
   }) {
-    const { playerName } = (0, import_react9.useContext)(PlayerContext);
+    const { playerName } = (0, import_react10.useContext)(PlayerContext);
     const activePlayer = game.players[game.activePlayerIndex];
-    return /* @__PURE__ */ import_react9.default.createElement(ScoreBoardContainer, null, /* @__PURE__ */ import_react9.default.createElement(Header, null, "Scores"), /* @__PURE__ */ import_react9.default.createElement(ScoreBoardList, null, game.players.map((player) => /* @__PURE__ */ import_react9.default.createElement(
+    return /* @__PURE__ */ import_react10.default.createElement(ScoreBoardContainer, null, /* @__PURE__ */ import_react10.default.createElement(Header, null, "Scores"), /* @__PURE__ */ import_react10.default.createElement(ScoreBoardList, null, game.players.map((player) => /* @__PURE__ */ import_react10.default.createElement(
       PlayerScoreEntry,
       {
         key: player.name,
@@ -29591,7 +29690,7 @@
     allowKick
   }) {
     const kickMutation = useKickMutation(gameId);
-    return /* @__PURE__ */ import_react9.default.createElement(ScoreBoardListItem, null, /* @__PURE__ */ import_react9.default.createElement(Name, null, player.name, " ", isYou ? "(You)" : null, isPlayersTurn && /* @__PURE__ */ import_react9.default.createElement(PlayerTurn, null, isYou ? "Take your turn" : "Taking turn")), /* @__PURE__ */ import_react9.default.createElement(Score, null, player.score), allowKick && /* @__PURE__ */ import_react9.default.createElement(
+    return /* @__PURE__ */ import_react10.default.createElement(ScoreBoardListItem, null, /* @__PURE__ */ import_react10.default.createElement(Name, null, player.name, " ", isYou ? "(You)" : null, isPlayersTurn && /* @__PURE__ */ import_react10.default.createElement(PlayerTurn, null, isYou ? "Take your turn" : "Taking turn")), /* @__PURE__ */ import_react10.default.createElement(Score, null, player.score), allowKick && /* @__PURE__ */ import_react10.default.createElement(
       KickButton,
       {
         onClick: () => kickMutation.mutate({ playerName: player.name })
@@ -29636,23 +29735,21 @@
 
   // client/src/GameBoard.tsx
   function GameBoard({ game }) {
-    const { playerName } = (0, import_react10.useContext)(PlayerContext);
+    const { playerName } = (0, import_react11.useContext)(PlayerContext);
     const moveMutation = useMoveMutation(game.id);
     const player = game.players.find((p) => p.name === playerName);
     const activePlayer = game.players[game.activePlayerIndex];
     const spectating = !player;
-    const isActivePlayer = player?.name === activePlayer.name;
-    const [showPlayerWarning, setShowPlayerWarning] = (0, import_react10.useState)(false);
-    (0, import_react10.useEffect)(() => {
+    const isActivePlayer = (player == null ? void 0 : player.name) === activePlayer.name;
+    const [showPlayerWarning, setShowPlayerWarning] = (0, import_react11.useState)(false);
+    (0, import_react11.useEffect)(() => {
       if (game.state === "ENDED") {
         return;
       }
       const onKeyDown = (e2) => {
         if (!isActivePlayer) {
           setShowPlayerWarning(true);
-          setTimeout(() => {
-            setShowPlayerWarning(false);
-          }, 2e3);
+          setTimeout(() => setShowPlayerWarning(false), 2e3);
           return;
         }
         switch (e2.key) {
@@ -29668,15 +29765,12 @@
           case "ArrowLeft":
             moveMutation.mutate({ direction: "W" });
             break;
-          default:
-            console.log(e2);
         }
       };
       document.addEventListener("keydown", onKeyDown);
       return () => document.removeEventListener("keydown", onKeyDown);
     }, [isActivePlayer, moveMutation, game.state]);
-    const highScorer = game.players.sort((a2, b2) => b2.score - a2.score)[0];
-    return /* @__PURE__ */ import_react10.default.createElement("div", null, /* @__PURE__ */ import_react10.default.createElement("h2", null, "2048"), game.state === "ENDED" ? /* @__PURE__ */ import_react10.default.createElement(import_react10.default.Fragment, null, /* @__PURE__ */ import_react10.default.createElement("p", null, "Game ended"), /* @__PURE__ */ import_react10.default.createElement("h1", null, highScorer.name, " wins! ")) : /* @__PURE__ */ import_react10.default.createElement(import_react10.default.Fragment, null, spectating ? /* @__PURE__ */ import_react10.default.createElement("p", null, "You are spectating") : /* @__PURE__ */ import_react10.default.createElement("p", null, isActivePlayer ? "Your turn" : "Wait for other players...")), /* @__PURE__ */ import_react10.default.createElement(Container, null, /* @__PURE__ */ import_react10.default.createElement(GameBoardContainer, null, /* @__PURE__ */ import_react10.default.createElement(GameBoardGrid, { game }), showPlayerWarning && /* @__PURE__ */ import_react10.default.createElement(PlayerWarning, null, "Wait your turn!")), /* @__PURE__ */ import_react10.default.createElement(
+    return /* @__PURE__ */ import_react11.default.createElement("div", null, /* @__PURE__ */ import_react11.default.createElement("h2", null, "2048"), game.state === "ENDED" ? /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement(GameEndBanner, { game, playerName })) : /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, spectating ? /* @__PURE__ */ import_react11.default.createElement("p", null, "You are spectating") : /* @__PURE__ */ import_react11.default.createElement("p", null, isActivePlayer ? "Your turn" : "Wait for other players...")), /* @__PURE__ */ import_react11.default.createElement(Container, null, /* @__PURE__ */ import_react11.default.createElement(GameBoardContainer, null, /* @__PURE__ */ import_react11.default.createElement(GameBoardGrid, { game }), showPlayerWarning && /* @__PURE__ */ import_react11.default.createElement(PlayerWarning, null, "Wait your turn!")), /* @__PURE__ */ import_react11.default.createElement(
       ScoreBoard,
       {
         game,
@@ -29685,24 +29779,14 @@
       }
     )));
   }
-  function GameBoardGrid({ game }) {
-    return /* @__PURE__ */ import_react10.default.createElement(Grid, { size: game.size }, game.board.map((row, y2) => /* @__PURE__ */ import_react10.default.createElement(import_react10.Fragment, { key: y2 }, row.map((cell, x2) => /* @__PURE__ */ import_react10.default.createElement(Cell, { key: x2, style: { background: getColor(cell) } }, cell)))));
+  function GameEndBanner({
+    game,
+    playerName
+  }) {
+    const isWon = game.board.flat().some((cell) => cell >= 2048);
+    const winner = game.players.sort((a2, b2) => b2.score - a2.score)[0];
+    return /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement("p", null, "Game ended"), isWon ? /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement("h1", null, winner.name === playerName ? "You won!" : `${winner.name} won!`)) : /* @__PURE__ */ import_react11.default.createElement("h1", null, "You lost"));
   }
-  var Grid = styled_components_browser_esm_default.div`
-  display: grid;
-  grid-template-columns: repeat(${(props) => props.size}, 60px);
-  grid-template-rows: repeat(${(props) => props.size}, 60px);
-  gap: 8px;
-`;
-  var Cell = styled_components_browser_esm_default.div`
-  font-size: 22px;
-  text-align: center;
-  font-weight: bold;
-  line-height: 60px;
-  background: #89b6a2;
-  border-radius: 3px;
-  color: white;
-`;
   var Container = styled_components_browser_esm_default.div`
   display: flex;
   gap: 24px;
@@ -29718,79 +29802,58 @@
   transform: translateY(-120px);
   margin: 0 80px;
 `;
-  function getColor(num) {
-    const n2 = Math.floor(Math.log2(num));
-    return colors[Math.min(n2 - 1, colors.length - 1)];
-  }
-  var colors = [
-    "#00A99F",
-    "#119EA1",
-    "#2194A4",
-    "#3289A6",
-    "#427EA9",
-    "#5373AB",
-    "#6369AE",
-    "#745EB0",
-    "#8553B2",
-    "#9549B5",
-    "#A63EB7",
-    "#B633BA",
-    "#C728BC",
-    "#D71EBF",
-    "#E813C1"
-  ];
 
   // client/src/Lobby.tsx
-  var import_react11 = __toESM(require_react());
+  var import_react12 = __toESM(require_react());
   function LobbyScreen({ game }) {
-    const { playerName, setPlayerName } = (0, import_react11.useContext)(PlayerContext);
+    const { playerName, setPlayerName } = (0, import_react12.useContext)(PlayerContext);
     const startMutation = useStartGameMutation(game.id);
     const joinMutation = useJoinGameMutation(game.id);
     const joined = playerName && game.players.find((p) => p.name === playerName);
-    return /* @__PURE__ */ import_react11.default.createElement("div", null, /* @__PURE__ */ import_react11.default.createElement("h2", null, "Lobby"), /* @__PURE__ */ import_react11.default.createElement("p", null, /* @__PURE__ */ import_react11.default.createElement("a", { href: window.location.href }, "Game link"), " (share with friends)"), /* @__PURE__ */ import_react11.default.createElement("p", null, "Players:"), /* @__PURE__ */ import_react11.default.createElement("ul", null, game.players.map((player) => /* @__PURE__ */ import_react11.default.createElement("li", { key: player.name }, player.name, " ", player.name === playerName ? "(You)" : null))), !joined ? /* @__PURE__ */ import_react11.default.createElement(import_react11.default.Fragment, null, /* @__PURE__ */ import_react11.default.createElement("label", null, "Your name:", " ", /* @__PURE__ */ import_react11.default.createElement(
+    return /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("h2", null, "Lobby"), /* @__PURE__ */ import_react12.default.createElement("p", null, /* @__PURE__ */ import_react12.default.createElement("a", { href: window.location.href }, "Game link"), " (share with friends)"), /* @__PURE__ */ import_react12.default.createElement("p", null, "Players:"), /* @__PURE__ */ import_react12.default.createElement("ul", null, game.players.map((player) => /* @__PURE__ */ import_react12.default.createElement("li", { key: player.name }, player.name, " ", player.name === playerName ? "(You)" : null))), !joined ? /* @__PURE__ */ import_react12.default.createElement(import_react12.default.Fragment, null, /* @__PURE__ */ import_react12.default.createElement("label", null, "Your name:", " ", /* @__PURE__ */ import_react12.default.createElement(
       "input",
       {
         value: playerName,
         onChange: (e2) => setPlayerName(e2.currentTarget.value)
       }
-    )), /* @__PURE__ */ import_react11.default.createElement(
+    )), /* @__PURE__ */ import_react12.default.createElement(
       "button",
       {
         onClick: () => joinMutation.mutate(),
         disabled: playerName === ""
       },
       "Join game"
-    )) : /* @__PURE__ */ import_react11.default.createElement("button", { onClick: () => startMutation.mutate() }, "Start"));
+    )) : /* @__PURE__ */ import_react12.default.createElement("button", { onClick: () => startMutation.mutate() }, "Start"));
   }
 
   // client/src/GameScreen.tsx
   function GameScreen() {
     const { id } = useParams();
-    const gameQuery = usePollGameQuery(id);
+    const gameQuery = useGameSubscription(id);
     if (gameQuery.status === "loading" || gameQuery.status === "idle") {
-      return /* @__PURE__ */ import_react12.default.createElement("p", null, "Loading...");
+      return /* @__PURE__ */ import_react13.default.createElement("p", null, "Loading...");
     }
     if (gameQuery.status === "error") {
-      return /* @__PURE__ */ import_react12.default.createElement("p", null, "Error! ", String(gameQuery.error));
+      return /* @__PURE__ */ import_react13.default.createElement("p", null, "Error! ", String(gameQuery.error));
     }
-    const game = { ...gameQuery.data, id };
+    const game = __spreadProps(__spreadValues({}, gameQuery.data), { id });
     switch (gameQuery.data.state) {
       case "LOBBY":
-        return /* @__PURE__ */ import_react12.default.createElement(LobbyScreen, { game });
+        return /* @__PURE__ */ import_react13.default.createElement(LobbyScreen, { game });
       case "STARTED":
       case "ENDED":
-        return /* @__PURE__ */ import_react12.default.createElement(GameBoard, { game });
+        return /* @__PURE__ */ import_react13.default.createElement(GameBoard, { game });
     }
   }
 
   // client/src/App.tsx
   var client = new QueryClient();
   function App() {
-    return /* @__PURE__ */ import_react13.default.createElement(QueryClientProvider, { client }, /* @__PURE__ */ import_react13.default.createElement(PlayerContextProvider, null, /* @__PURE__ */ import_react13.default.createElement(Container2, null, /* @__PURE__ */ import_react13.default.createElement(BrowserRouter, null, /* @__PURE__ */ import_react13.default.createElement(Routes, null, /* @__PURE__ */ import_react13.default.createElement(Route, { path: "/game/:id", element: /* @__PURE__ */ import_react13.default.createElement(GameScreen, null) }), /* @__PURE__ */ import_react13.default.createElement(Route, { path: "/", element: /* @__PURE__ */ import_react13.default.createElement(StartScreen, null) }))))));
+    return /* @__PURE__ */ import_react14.default.createElement(QueryClientProvider, { client }, /* @__PURE__ */ import_react14.default.createElement(PlayerContextProvider, null, /* @__PURE__ */ import_react14.default.createElement(Container2, null, /* @__PURE__ */ import_react14.default.createElement(BrowserRouter, null, /* @__PURE__ */ import_react14.default.createElement(Routes, null, /* @__PURE__ */ import_react14.default.createElement(Route, { path: "/game/:id", element: /* @__PURE__ */ import_react14.default.createElement(GameScreen, null) }), /* @__PURE__ */ import_react14.default.createElement(Route, { path: "/", element: /* @__PURE__ */ import_react14.default.createElement(StartScreen, null) }))))));
   }
   var container = document.getElementById("root");
   var root = (0, import_client.createRoot)(container);
-  root.render(/* @__PURE__ */ import_react13.default.createElement(App, null));
+  root.render(/* @__PURE__ */ import_react14.default.createElement(App, null));
   var Container2 = styled_components_browser_esm_default.div`
   display: flex;
   justify-content: center;

@@ -1,8 +1,8 @@
-import { Direction, Game, ShiftResult } from "./types";
+import { Direction, Game } from "../../common/types";
 import sample from "lodash/sample";
 import { cloneDeep } from "lodash";
 
-const END_GAME_SCORE = 32; // 2048;
+const END_GAME_SCORE = 2048;
 
 export function shift(
   game: Game,
@@ -95,7 +95,7 @@ function zeroFill(arr: number[], length: number): number[] {
 /**
  * Adds a 2 to a random empty cell
  */
-export function addNumber(game: Game): Game {
+export function addNumber(game: Game, num: number): Game {
   const emptyCoords: [number, number][] = [];
   for (let x = 0; x < game.size; x++) {
     for (let y = 0; y < game.size; y++) {
@@ -108,11 +108,12 @@ export function addNumber(game: Game): Game {
   const board = cloneDeep(game.board);
 
   let state = game.state;
-  if (emptyCoords.length === 0) {
+  const randCoord = sample(emptyCoords);
+  if (!randCoord) {
     game = endGame(game); // Needs cleanup
   } else {
-    const [x, y] = sample(emptyCoords);
-    board[y][x] = 2;
+    const [x, y] = randCoord;
+    board[y][x] = num;
   }
 
   return { ...game, board, state };
@@ -189,3 +190,8 @@ export function nextPlayer(game: Game): Game {
   }
   return { ...game, activePlayerIndex: next };
 }
+
+type ShiftResult = {
+  board: number[][];
+  score: number;
+};

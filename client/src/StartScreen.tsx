@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import { useCreateGameMutation } from "./api";
 import { PlayerContext } from "./PlayerContext";
 
@@ -20,29 +21,26 @@ export function StartScreen() {
 
   return (
     <div>
-      <label>
-        Your name:{" "}
-        <input
-          type="string"
-          value={playerName}
-          onChange={(e) => setPlayerName(e.currentTarget.value)}
-        />
-      </label>
-
       {createGameMutation.status === "loading" ? (
         <>Loading...</>
       ) : (
         <>
           <h2>Create game</h2>
-          <label>
-            Size{" "}
+          <Inputs>
+            <label>Your name:</label>
+            <input
+              type="string"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.currentTarget.value)}
+            />
+            <label>Size</label>
             <input
               type="number"
               value={size}
               onChange={(e) => setSize(e.currentTarget.valueAsNumber)}
             />
-          </label>
-          <button onClick={handleStart}>Start</button>
+          </Inputs>
+          <StartButton onClick={handleStart}>Start</StartButton>
           {createGameMutation.status === "error" ? (
             <p>{String(createGameMutation.error)}</p>
           ) : null}
@@ -51,3 +49,16 @@ export function StartScreen() {
     </div>
   );
 }
+
+const Inputs = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+`;
+
+const StartButton = styled.button`
+  margin-top: 30px;
+  padding: 12px;
+  width: 100px;
+`;

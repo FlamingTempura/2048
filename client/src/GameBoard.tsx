@@ -2,6 +2,7 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Game, GameWithId } from "../../common/types";
 import { useMoveMutation } from "./api";
+import { GameBoardGrid } from "./GameBoardGrid";
 import { PlayerContext } from "./PlayerContext";
 import { ScoreBoard } from "./ScoreBoard";
 
@@ -24,9 +25,7 @@ export function GameBoard({ game }: { game: GameWithId }) {
     const onKeyDown = (e: KeyboardEvent) => {
       if (!isActivePlayer) {
         setShowPlayerWarning(true);
-        setTimeout(() => {
-          setShowPlayerWarning(false);
-        }, 2000);
+        setTimeout(() => setShowPlayerWarning(false), 2000);
         return;
       }
       switch (e.key) {
@@ -42,15 +41,11 @@ export function GameBoard({ game }: { game: GameWithId }) {
         case "ArrowLeft":
           moveMutation.mutate({ direction: "W" });
           break;
-        default:
-          console.log(e);
       }
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [isActivePlayer, moveMutation, game.state]);
-
-  const highScorer = game.players.sort((a, b) => b.score - a.score)[0];
 
   return (
     <div>
@@ -58,8 +53,7 @@ export function GameBoard({ game }: { game: GameWithId }) {
 
       {game.state === "ENDED" ? (
         <>
-          <p>Game ended</p>
-          <h1>{highScorer.name} wins! </h1>
+          <GameEndBanner game={game} playerName={playerName} />
         </>
       ) : (
         <>
@@ -86,38 +80,31 @@ export function GameBoard({ game }: { game: GameWithId }) {
   );
 }
 
-function GameBoardGrid({ game }: { game: Game }) {
+function GameEndBanner({
+  game,
+  playerName,
+}: {
+  game: GameWithId;
+  playerName: string;
+}) {
+  const isWon = game.board.flat().some((cell) => cell >= 2048);
+  const winner = game.players.sort((a, b) => b.score - a.score)[0];
+
   return (
-    <Grid size={game.size}>
-      {game.board.map((row, y) => (
-        <Fragment key={y}>
-          {row.map((cell, x) => (
-            <Cell key={x} style={{ background: getColor(cell) }}>
-              {cell}
-            </Cell>
-          ))}
-        </Fragment>
-      ))}
-    </Grid>
+    <>
+      <p>Game ended</p>
+      {isWon ? (
+        <>
+          <h1>
+            {winner.name === playerName ? "You won!" : `${winner.name} won!`}
+          </h1>
+        </>
+      ) : (
+        <h1>You lost</h1>
+      )}
+    </>
   );
 }
-
-const Grid = styled.div<{ size: number }>`
-  display: grid;
-  grid-template-columns: repeat(${(props) => props.size}, 60px);
-  grid-template-rows: repeat(${(props) => props.size}, 60px);
-  gap: 8px;
-`;
-
-const Cell = styled.div`
-  font-size: 22px;
-  text-align: center;
-  font-weight: bold;
-  line-height: 60px;
-  background: #89b6a2;
-  border-radius: 3px;
-  color: white;
-`;
 
 const Container = styled.div`
   display: flex;
@@ -136,26 +123,3 @@ const PlayerWarning = styled.div`
   transform: translateY(-120px);
   margin: 0 80px;
 `;
-
-function getColor(num: number): string {
-  const n = Math.floor(Math.log2(num));
-  return colors[Math.min(n - 1, colors.length - 1)];
-}
-
-const colors = [
-  "#00A99F",
-  "#119EA1",
-  "#2194A4",
-  "#3289A6",
-  "#427EA9",
-  "#5373AB",
-  "#6369AE",
-  "#745EB0",
-  "#8553B2",
-  "#9549B5",
-  "#A63EB7",
-  "#B633BA",
-  "#C728BC",
-  "#D71EBF",
-  "#E813C1",
-];
