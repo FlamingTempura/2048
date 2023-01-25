@@ -1,85 +1,64 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Direction, Game, GameWithId } from "../../common/types";
-import { useKickMutation, useMoveMutation } from "./api";
-import { PlayerContext } from "./App";
+import { Game, GameWithId } from "../../common/types";
+import { useMoveMutation } from "./api";
+import { PlayerContext } from "./PlayerContext";
+import { ScoreBoard } from "./ScoreBoard";
 
 export function GameBoard({ game }: { game: GameWithId }) {
-  const moveMutation = useMoveMutation(game.id);
-  const kickMutation = useKickMutation(game.id);
-
-  const handleShift = async (direction: Direction) => {
-    await moveMutation.mutate({ direction });
-  };
-
   const { playerName } = useContext(PlayerContext);
+  const moveMutation = useMoveMutation(game.id);
 
   const player = game.players.find((p) => p.name === playerName);
   const activePlayer = game.players[game.activePlayerIndex];
 
   const isActivePlayer = player?.name === activePlayer.name;
 
+  const [showPlayerWarning, setShowPlayerWarning] = useState(false);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (!isActivePlayer) {
+        setShowPlayerWarning(true);
+        setTimeout(() => {
+          setShowPlayerWarning(false);
+        }, 2000);
+        return;
+      }
+      switch (e.key) {
+        case "ArrowUp":
+          moveMutation.mutate({ direction: "N" });
+          break;
+        case "ArrowRight":
+          moveMutation.mutate({ direction: "E" });
+          break;
+        case "ArrowDown":
+          moveMutation.mutate({ direction: "S" });
+          break;
+        case "ArrowLeft":
+          moveMutation.mutate({ direction: "W" });
+          break;
+        default:
+          console.log(e);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isActivePlayer, moveMutation]);
+
   return (
     <div>
       <h2>2048</h2>
 
-      {player ? <p>Your score: {player.score}</p> : <p>You are spectating</p>}
+      {!player && <p>You are spectating</p>}
 
-      {isActivePlayer ? (
-        <p>Your turn</p>
-      ) : (
-        <p>
-          {activePlayer.name}'s turn{" "}
-          <button
-            onClick={() =>
-              kickMutation.mutate({ playerName: activePlayer.name })
-            }
-          >
-            Kick
-          </button>
-        </p>
-      )}
-
-      <GameBoardGrid game={game} />
-      {isActivePlayer && (
-        <>
-          <button
-            onClick={() => handleShift("N")}
-            disabled={moveMutation.status === "loading"}
-          >
-            Up
-          </button>
-          <button
-            onClick={() => handleShift("E")}
-            disabled={moveMutation.status === "loading"}
-          >
-            Right
-          </button>
-          <button
-            onClick={() => handleShift("S")}
-            disabled={moveMutation.status === "loading"}
-          >
-            Down
-          </button>
-          <button
-            onClick={() => handleShift("W")}
-            disabled={moveMutation.status === "loading"}
-          >
-            Left
-          </button>
-        </>
-      )}
-
-      <div>
-        Scores:
-        <ul>
-          {game.players.map((player) => (
-            <li key={player.name}>
-              {player.name}: {player.score}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <Container>
+        <GameBoardContainer>
+          <GameBoardGrid game={game} />
+          {showPlayerWarning && <PlayerWarning>Wait your turn!</PlayerWarning>}
+        </GameBoardContainer>
+        <ScoreBoard game={game} />
+      </Container>
     </div>
   );
 }
@@ -108,13 +87,31 @@ const Grid = styled.div<{ size: number }>`
 `;
 
 const Cell = styled.div`
-  font-size: 30px;
+  font-size: 22px;
   text-align: center;
   font-weight: bold;
   line-height: 60px;
   background: #89b6a2;
   border-radius: 3px;
   color: white;
+`;
+
+const Container = styled.div`
+  display: flex;
+  gap: 24px;
+`;
+
+const GameBoardContainer = styled.div``;
+
+const PlayerWarning = styled.div`
+  display: block;
+  background: white;
+  border-radius: 4px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  transform: translateY(-120px);
+  margin: 0 80px;
 `;
 
 function getColor(num: number): string {

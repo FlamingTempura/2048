@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
 import { GameWithId } from "../../common/types";
 import { useJoinGameMutation, useStartGameMutation } from "./api";
-import { PlayerContext } from "./App";
+import { PlayerContext } from "./PlayerContext";
 
 export function LobbyScreen({ game }: { game: GameWithId }) {
   const { playerName, setPlayerName } = useContext(PlayerContext);
 
   const startMutation = useStartGameMutation(game.id);
-
   const joinMutation = useJoinGameMutation(game.id);
 
   const joined = playerName && game.players.find((p) => p.name === playerName);

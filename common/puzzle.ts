@@ -1,26 +1,29 @@
 import { Direction, Game, ShiftResult } from "./types";
 import sample from "lodash/sample";
+import { cloneDeep } from "lodash";
 
-export function shift(game: Game, direction: Direction): void {
+export function shift(game: Game, direction: Direction): Game {
+  const newGame = cloneDeep(game);
   let shiftResult: ShiftResult;
   switch (direction) {
     case "N":
-      shiftResult = shiftNorth(game.board, game.size);
+      shiftResult = shiftNorth(newGame.board, newGame.size);
       break;
     case "E":
-      shiftResult = shiftEast(game.board, game.size);
+      shiftResult = shiftEast(newGame.board, newGame.size);
       break;
     case "S":
-      shiftResult = shiftSouth(game.board, game.size);
+      shiftResult = shiftSouth(newGame.board, newGame.size);
       break;
     case "W":
-      shiftResult = shiftWest(game.board, game.size);
+      shiftResult = shiftWest(newGame.board, newGame.size);
       break;
     default:
       throw new Error("Invalid direction");
   }
-  game.board = shiftResult.board;
-  game.players[game.activePlayerIndex].score += shiftResult.score;
+  newGame.board = shiftResult.board;
+  newGame.players[game.activePlayerIndex].score += shiftResult.score;
+  return newGame;
 }
 
 function shiftNorth(board: number[][], size: number): ShiftResult {
@@ -76,7 +79,10 @@ function zeroFill(arr: number[], length: number): number[] {
   return [...arr, ...Array(length).fill(0)].slice(0, length);
 }
 
-export function addNumber(game: Game): void {
+/**
+ * Adds a 2 to a random empty cell
+ */
+export function addNumber(game: Game): Game {
   const emptyCoords: [number, number][] = [];
   for (let x = 0; x < game.size; x++) {
     for (let y = 0; y < game.size; y++) {
@@ -86,15 +92,19 @@ export function addNumber(game: Game): void {
     }
   }
 
+  const board = cloneDeep(game.board);
+
   if (emptyCoords.length === 0) {
     throw "TODO: handle end game";
   } else {
     const [x, y] = sample(emptyCoords);
-    game.board[y][x] = 2;
+    board[y][x] = 2;
   }
+
+  return { ...game, board };
 }
 
-export function emptyBoard(size: number): number[][] {
+function emptyBoard(size: number): number[][] {
   const grid: number[][] = [];
 
   for (let row = 0; row < size; row++) {
@@ -104,4 +114,60 @@ export function emptyBoard(size: number): number[][] {
     }
   }
   return grid;
+}
+
+export function createGame(size: number): Game {
+  return {
+    players: [],
+    activePlayerIndex: 0,
+    size,
+    board: emptyBoard(size),
+    state: "LOBBY",
+  };
+}
+
+export function addPlayer(game: Game, name: string): Game {
+  if (game.players.some((p) => p.name === name)) {
+    throw new Error("Player with that name already in the game");
+  }
+  return {
+    ...game,
+    players: [...game.players, { name, score: 0 }],
+  };
+}
+
+export function startGame(game: Game): Game {
+  if (game.state === "ENDED") {
+    throw new Error("Game has ended");
+  }
+  return { ...game, state: "STARTED" };
+}
+
+export function kickPlayer(game: Game, playerName: string): Game {
+  const index = game.players.findIndex((p) => p.name === playerName);
+
+  if (index === -1) {
+    // Already deleted, no need to throw error in this case
+    return game;
+  } else {
+    return {
+      ...game,
+      players: [
+        ...game.players.slice(0, index),
+        ...game.players.slice(index + 1),
+      ],
+      activePlayerIndex:
+        game.activePlayerIndex > index
+          ? game.activePlayerIndex - 1
+          : game.activePlayerIndex,
+    };
+  }
+}
+
+export function nextPlayer(game: Game): Game {
+  let next = game.activePlayerIndex + 1;
+  if (next >= game.players.length) {
+    next = 0;
+  }
+  return { ...game, activePlayerIndex: next };
 }

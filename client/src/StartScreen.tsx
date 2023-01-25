@@ -1,35 +1,18 @@
 import React, { useContext, useState } from "react";
-import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { PlayerContext } from "./App";
+import { useCreateGameMutation } from "./api";
+import { PlayerContext } from "./PlayerContext";
 
 export function StartScreen() {
   const nav = useNavigate();
-  const playerCtx = useContext(PlayerContext);
+  const { playerName, setPlayerName } = useContext(PlayerContext);
   const [size, setSize] = useState(6);
 
-  const createGameMutation = useMutation<
-    { id: string },
-    unknown,
-    { hostPlayerName: string; size: number }
-  >({
-    mutationKey: ["create-game"],
-    mutationFn: async (data) => {
-      const res = await fetch("/api/game", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "content-type": "application/json" },
-      });
-      if (res.status !== 200) {
-        throw new Error("Unexpected response status");
-      }
-      return res.json();
-    },
-  });
+  const createGameMutation = useCreateGameMutation();
 
   async function handleStart() {
     const res = await createGameMutation.mutateAsync({
-      hostPlayerName: playerCtx.playerName,
+      hostPlayerName: playerName,
       size,
     });
     nav(`/game/${res.id}`);
@@ -41,8 +24,8 @@ export function StartScreen() {
         Your name:{" "}
         <input
           type="string"
-          value={playerCtx.playerName}
-          onChange={(e) => playerCtx.setPlayerName(e.currentTarget.value)}
+          value={playerName}
+          onChange={(e) => setPlayerName(e.currentTarget.value)}
         />
       </label>
 

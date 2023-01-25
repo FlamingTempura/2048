@@ -1,10 +1,8 @@
 export type Game = {
   size: number;
-  players: {
-    name: string;
-    score: number;
-  }[];
+  players: Player[];
   activePlayerIndex: number;
+  /** 0 represents an empty cell */
   board: number[][];
   state: "LOBBY" | "STARTED" | "ENDED";
 };
@@ -17,4 +15,9 @@ export type ShiftResult = {
   board: number[][];
   score: number;
   //transitions: { from: [number, number], to: [number, number], score: number }
+};
+
+export type Player = {
+  name: string;
+  score: number;
 };
