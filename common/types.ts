@@ -9,11 +9,7 @@ export type Game = {
   state: "LOBBY" | "STARTED" | "ENDED";
 };
 
-type Move = {
-  player: number;
-  direction: Direction;
-  addedNumber: [number, number];
-};
+export type GameWithId = Game & { id: string };
 
 export type Direction = "N" | "E" | "S" | "W";
 

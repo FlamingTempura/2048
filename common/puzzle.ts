@@ -52,6 +52,7 @@ function shiftWest(board: number[][], size: number): ShiftResult {
       if (row[x] === row[x + 1]) {
         score = row[x] * 2;
         row[x] = row[x] * 2;
+        // TODO: if 2048, game is won
         row[x + 1] = -1; // ignore the next cell
       }
     }

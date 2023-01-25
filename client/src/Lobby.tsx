@@ -1,58 +1,23 @@
 import React, { useContext } from "react";
-import { useMutation, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
-import { Game } from "../../common/types";
+import { GameWithId } from "../../common/types";
+import { useJoinGameMutation, useStartGameMutation } from "./api";
 import { PlayerContext } from "./App";
 
-export function LobbyScreen({
-  game,
-  gameQueryKey,
-}: {
-  game: Game;
-  gameQueryKey: string[];
-}) {
-  const { id } = useParams();
-  const queryClient = useQueryClient();
+export function LobbyScreen({ game }: { game: GameWithId }) {
   const { playerName, setPlayerName } = useContext(PlayerContext);
 
-  const startMutation = useMutation<undefined, unknown, void>({
-    mutationKey: ["start"],
-    mutationFn: async (data) => {
-      const res = await fetch(`/api/game/${id}`, {
-        method: "PUT",
-        body: JSON.stringify({ state: "STARTED" }),
-        headers: { "content-type": "application/json" },
-      });
-      if (res.status !== 200) {
-        throw new Error("Unexpected response status");
-      }
-      return res.json();
-    },
-    onSuccess: () => queryClient.invalidateQueries(gameQueryKey),
-  });
+  const startMutation = useStartGameMutation(game.id);
 
-  const joinMutation = useMutation<undefined, unknown, void>({
-    mutationKey: ["join"], // FIXME
-    mutationFn: async () => {
-      const res = await fetch(`/api/game/${id}/player`, {
-        method: "POST",
-        body: JSON.stringify({ playerName }),
-        headers: { "content-type": "application/json" },
-      });
-      if (res.status !== 200) {
-        throw new Error("Unexpected response status");
-      }
-      return res.json();
-    },
-    onSuccess: () => queryClient.invalidateQueries(gameQueryKey),
-  });
+  const joinMutation = useJoinGameMutation(game.id);
 
   const joined = playerName && game.players.find((p) => p.name === playerName);
 
   return (
     <div>
       <h2>Lobby</h2>
-      <p>Game ID: {id}</p>
+      <p>
+        <a href={window.location.href}>Game link</a> (share with friends)
+      </p>
       <p>Players:</p>
       <ul>
         {game.players.map((player) => (

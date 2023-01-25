@@ -1084,7 +1084,7 @@
             }
             return dispatcher.useContext(Context);
           }
-          function useState7(initialState) {
+          function useState6(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1112,7 +1112,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
-          function useMemo5(create, deps) {
+          function useMemo3(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useMemo(create, deps);
           }
@@ -1883,10 +1883,10 @@
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect4;
-          exports.useMemo = useMemo5;
+          exports.useMemo = useMemo3;
           exports.useReducer = useReducer;
           exports.useRef = useRef3;
-          exports.useState = useState7;
+          exports.useState = useState6;
           exports.useSyncExternalStore = useSyncExternalStore2;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -23994,7 +23994,7 @@
   });
 
   // client/src/App.tsx
-  var import_react10 = __toESM(require_react());
+  var import_react11 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
   // node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js
@@ -28286,14 +28286,104 @@
   }
 
   // client/src/GameScreen.tsx
-  var import_react9 = __toESM(require_react());
+  var import_react10 = __toESM(require_react());
+
+  // client/src/api.ts
+  var import_react6 = __toESM(require_react());
+  function usePollGameQuery(id) {
+    return useQuery({
+      queryKey: ["game", id],
+      queryFn: async () => {
+        const res = await fetch(`/api/game/${id}`);
+        if (res.status !== 200) {
+          throw new Error("Unexpected response status");
+        }
+        return res.json();
+      },
+      cacheTime: 0,
+      refetchInterval: 1e3
+    });
+  }
+  function useMoveMutation(gameId) {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationKey: ["move"],
+      mutationFn: async (data) => {
+        const res = await fetch(`/api/game/${gameId}/move`, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: { "content-type": "application/json" }
+        });
+        if (res.status !== 200) {
+          throw new Error("Unexpected response status");
+        }
+        return res.json();
+      },
+      onSuccess: () => queryClient.invalidateQueries(["game", gameId])
+    });
+  }
+  function useKickMutation(gameId) {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationKey: ["kick"],
+      mutationFn: async (data) => {
+        const res = await fetch(`/api/game/${gameId}/player/${data.playerName}`, {
+          method: "DELETE",
+          headers: { "content-type": "application/json" }
+        });
+        if (res.status !== 200) {
+          throw new Error("Unexpected response status");
+        }
+        return res.json();
+      },
+      onSuccess: () => queryClient.invalidateQueries(["game", gameId])
+    });
+  }
+  function useStartGameMutation(gameId) {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationKey: ["start"],
+      mutationFn: async () => {
+        const res = await fetch(`/api/game/${gameId}`, {
+          method: "PUT",
+          body: JSON.stringify({ state: "STARTED" }),
+          headers: { "content-type": "application/json" }
+        });
+        if (res.status !== 200) {
+          throw new Error("Unexpected response status");
+        }
+        return res.json();
+      },
+      onSuccess: () => queryClient.invalidateQueries(["game", gameId])
+    });
+  }
+  function useJoinGameMutation(gameId) {
+    const queryClient = useQueryClient();
+    const { playerName } = (0, import_react6.useContext)(PlayerContext);
+    return useMutation({
+      mutationKey: ["join"],
+      // FIXME
+      mutationFn: async () => {
+        const res = await fetch(`/api/game/${gameId}/player`, {
+          method: "POST",
+          body: JSON.stringify({ playerName }),
+          headers: { "content-type": "application/json" }
+        });
+        if (res.status !== 200) {
+          throw new Error("Unexpected response status");
+        }
+        return res.json();
+      },
+      onSuccess: () => queryClient.invalidateQueries(["game", gameId])
+    });
+  }
 
   // client/src/GameBoard.tsx
-  var import_react7 = __toESM(require_react());
+  var import_react8 = __toESM(require_react());
 
   // node_modules/styled-components/dist/styled-components.browser.esm.js
   var import_react_is = __toESM(require_react_is());
-  var import_react6 = __toESM(require_react());
+  var import_react7 = __toESM(require_react());
   var import_shallowequal = __toESM(require_shallowequal());
 
   // node_modules/@emotion/stylis/dist/stylis.browser.esm.js
@@ -29226,27 +29316,27 @@
       return t3.name || j(15), te(e3, t3.name);
     }, 5381).toString() : "", m;
   }
-  var ue = import_react6.default.createContext();
+  var ue = import_react7.default.createContext();
   var le = ue.Consumer;
-  var de = import_react6.default.createContext();
+  var de = import_react7.default.createContext();
   var he = (de.Consumer, new Z());
   var pe = ce();
   function fe() {
-    return (0, import_react6.useContext)(ue) || he;
+    return (0, import_react7.useContext)(ue) || he;
   }
   function me() {
-    return (0, import_react6.useContext)(de) || pe;
+    return (0, import_react7.useContext)(de) || pe;
   }
   function ye(e2) {
-    var t2 = (0, import_react6.useState)(e2.stylisPlugins), n2 = t2[0], s2 = t2[1], c2 = fe(), u2 = (0, import_react6.useMemo)(function() {
+    var t2 = (0, import_react7.useState)(e2.stylisPlugins), n2 = t2[0], s2 = t2[1], c2 = fe(), u2 = (0, import_react7.useMemo)(function() {
       var t3 = c2;
       return e2.sheet ? t3 = e2.sheet : e2.target && (t3 = t3.reconstructWithOptions({ target: e2.target }, false)), e2.disableCSSOMInjection && (t3 = t3.reconstructWithOptions({ useCSSOMInjection: false })), t3;
-    }, [e2.disableCSSOMInjection, e2.sheet, e2.target]), l2 = (0, import_react6.useMemo)(function() {
+    }, [e2.disableCSSOMInjection, e2.sheet, e2.target]), l2 = (0, import_react7.useMemo)(function() {
       return ce({ options: { prefix: !e2.disableVendorPrefixes }, plugins: n2 });
     }, [e2.disableVendorPrefixes, n2]);
-    return (0, import_react6.useEffect)(function() {
+    return (0, import_react7.useEffect)(function() {
       (0, import_shallowequal.default)(n2, e2.stylisPlugins) || s2(e2.stylisPlugins);
-    }, [e2.stylisPlugins]), import_react6.default.createElement(ue.Provider, { value: u2 }, import_react6.default.createElement(de.Provider, { value: l2 }, true ? import_react6.default.Children.only(e2.children) : e2.children));
+    }, [e2.stylisPlugins]), import_react7.default.createElement(ue.Provider, { value: u2 }, import_react7.default.createElement(de.Provider, { value: l2 }, true ? import_react7.default.Children.only(e2.children) : e2.children));
   }
   var ve = function() {
     function e2(e3, t2) {
@@ -29322,7 +29412,7 @@
               s2[i2 - 1] = arguments[i2];
             r2.apply(void 0, [e3].concat(s2));
           }
-        }, (0, import_react6.useRef)(), o2 && !Pe.has(n2) && (console.warn(n2), Pe.add(n2));
+        }, (0, import_react7.useRef)(), o2 && !Pe.has(n2) && (console.warn(n2), Pe.add(n2));
       } catch (e3) {
         Ie.test(e3.message) && Pe.delete(n2);
       } finally {
@@ -29365,7 +29455,7 @@
     }
     return e2;
   }
-  var Ge = import_react6.default.createContext();
+  var Ge = import_react7.default.createContext();
   var Le = Ge.Consumer;
   var Ye = {};
   function qe(e2, t2, n2) {
@@ -29383,7 +29473,7 @@
     var C, I2 = new se(n2, g2, o2 ? e2.componentStyle : void 0), P2 = I2.isStatic && 0 === c2.length, O = function(e3, t3) {
       return function(e4, t4, n3, r2) {
         var o3 = e4.attrs, i3 = e4.componentStyle, a3 = e4.defaultProps, c3 = e4.foldedComponentIds, d3 = e4.shouldForwardProp, h3 = e4.styledComponentId, p2 = e4.target;
-        (0, import_react6.useDebugValue)(h3);
+        (0, import_react7.useDebugValue)(h3);
         var f2 = function(e5, t5, n4) {
           void 0 === e5 && (e5 = E);
           var r3 = v({}, t5, { theme: e5 }), o4 = {};
@@ -29392,16 +29482,16 @@
             for (t6 in b(i4) && (i4 = i4(r3)), i4)
               r3[t6] = o4[t6] = "className" === t6 ? (n5 = o4[t6], s2 = i4[t6], n5 && s2 ? n5 + " " + s2 : n5 || s2) : i4[t6];
           }), [r3, o4];
-        }(Re(t4, (0, import_react6.useContext)(Ge), a3) || E, t4, o3), y2 = f2[0], g3 = f2[1], S3 = function(e5, t5, n4, r3) {
+        }(Re(t4, (0, import_react7.useContext)(Ge), a3) || E, t4, o3), y2 = f2[0], g3 = f2[1], S3 = function(e5, t5, n4, r3) {
           var o4 = fe(), s2 = me(), i4 = t5 ? e5.generateAndInjectStyles(E, o4, s2) : e5.generateAndInjectStyles(n4, o4, s2);
-          return (0, import_react6.useDebugValue)(i4), !t5 && r3 && r3(i4), i4;
+          return (0, import_react7.useDebugValue)(i4), !t5 && r3 && r3(i4), i4;
         }(i3, r2, y2, true ? e4.warnTooManyClasses : void 0), w2 = n3, _2 = g3.$as || t4.$as || g3.as || t4.as || p2, N2 = ke(_2), A3 = g3 !== t4 ? v({}, t4, {}, g3) : t4, C2 = {};
         for (var I3 in A3)
           "$" !== I3[0] && "as" !== I3 && ("forwardedAs" === I3 ? C2.as = A3[I3] : (d3 ? d3(I3, emotion_is_prop_valid_esm_default, _2) : !N2 || emotion_is_prop_valid_esm_default(I3)) && (C2[I3] = A3[I3]));
-        return t4.style && g3.style !== t4.style && (C2.style = v({}, t4.style, {}, g3.style)), C2.className = Array.prototype.concat(c3, h3, S3 !== h3 ? S3 : null, t4.className, g3.className).filter(Boolean).join(" "), C2.ref = w2, (0, import_react6.createElement)(_2, C2);
+        return t4.style && g3.style !== t4.style && (C2.style = v({}, t4.style, {}, g3.style)), C2.className = Array.prototype.concat(c3, h3, S3 !== h3 ? S3 : null, t4.className, g3.className).filter(Boolean).join(" "), C2.ref = w2, (0, import_react7.createElement)(_2, C2);
       }(C, e3, t3, P2);
     };
-    return O.displayName = f, (C = import_react6.default.forwardRef(O)).attrs = S2, C.componentStyle = I2, C.displayName = f, C.shouldForwardProp = A2, C.foldedComponentIds = o2 ? Array.prototype.concat(e2.foldedComponentIds, e2.styledComponentId) : w, C.styledComponentId = g2, C.target = o2 ? e2.target : e2, C.withComponent = function(e3) {
+    return O.displayName = f, (C = import_react7.default.forwardRef(O)).attrs = S2, C.componentStyle = I2, C.displayName = f, C.shouldForwardProp = A2, C.foldedComponentIds = o2 ? Array.prototype.concat(e2.foldedComponentIds, e2.styledComponentId) : w, C.styledComponentId = g2, C.target = o2 ? e2.target : e2, C.withComponent = function(e3) {
       var r2 = t2.componentId, o3 = function(e4, t3) {
         if (null == e4)
           return {};
@@ -29474,14 +29564,14 @@
         if (e3.sealed)
           return j(2);
         var n2 = ((t3 = {})[A] = "", t3["data-styled-version"] = "5.3.6", t3.dangerouslySetInnerHTML = { __html: e3.instance.toString() }, t3), o2 = q();
-        return o2 && (n2.nonce = o2), [import_react6.default.createElement("style", v({}, n2, { key: "sc-0-0" }))];
+        return o2 && (n2.nonce = o2), [import_react7.default.createElement("style", v({}, n2, { key: "sc-0-0" }))];
       }, this.seal = function() {
         e3.sealed = true;
       }, this.instance = new Z({ isServer: true }), this.sealed = false;
     }
     var t2 = e2.prototype;
     return t2.collectStyles = function(e3) {
-      return this.sealed ? j(2) : import_react6.default.createElement(ye, { sheet: this.instance }, e3);
+      return this.sealed ? j(2) : import_react7.default.createElement(ye, { sheet: this.instance }, e3);
     }, t2.interleaveWithNodeStream = function(e3) {
       return j(3);
     }, e2;
@@ -29490,183 +29580,133 @@
   var styled_components_browser_esm_default = He;
 
   // client/src/GameBoard.tsx
-  function GameBoard({
-    game,
-    gameQueryKey
-  }) {
-    const { id } = useParams();
-    const queryClient = useQueryClient();
-    const moveMutation = useMutation({
-      mutationKey: ["move"],
-      mutationFn: async (data) => {
-        const res = await fetch(`/api/game/${id}/move`, {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: { "content-type": "application/json" }
-        });
-        if (res.status !== 200) {
-          throw new Error("Unexpected response status");
-        }
-        return res.json();
-      },
-      onSuccess: () => queryClient.invalidateQueries(gameQueryKey)
-    });
-    const kickMutation = useMutation({
-      mutationKey: ["kick"],
-      mutationFn: async (data) => {
-        const res = await fetch(`/api/game/${id}/player/${activePlayer.name}`, {
-          method: "DELETE",
-          body: JSON.stringify(data),
-          headers: { "content-type": "application/json" }
-        });
-        if (res.status !== 200) {
-          throw new Error("Unexpected response status");
-        }
-        return res.json();
-      },
-      onSuccess: () => queryClient.invalidateQueries(gameQueryKey)
-    });
+  function GameBoard({ game }) {
+    const moveMutation = useMoveMutation(game.id);
+    const kickMutation = useKickMutation(game.id);
     const handleShift = async (direction) => {
       await moveMutation.mutate({ direction });
     };
-    const { playerName } = (0, import_react7.useContext)(PlayerContext);
+    const { playerName } = (0, import_react8.useContext)(PlayerContext);
     const player = game.players.find((p) => p.name === playerName);
     const activePlayer = game.players[game.activePlayerIndex];
     const isActivePlayer = player?.name === activePlayer.name;
-    return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h2", null, "The game ", id), player ? /* @__PURE__ */ import_react7.default.createElement("p", null, "Your score: ", player.score) : /* @__PURE__ */ import_react7.default.createElement("p", null, "You are spectating"), isActivePlayer ? /* @__PURE__ */ import_react7.default.createElement("p", null, "Your turn") : /* @__PURE__ */ import_react7.default.createElement("p", null, activePlayer.name, "'s turn", " ", /* @__PURE__ */ import_react7.default.createElement("button", { onClick: () => kickMutation.mutate() }, "Kick")), /* @__PURE__ */ import_react7.default.createElement(GameBoardGrid, { game }), isActivePlayer && /* @__PURE__ */ import_react7.default.createElement(import_react7.default.Fragment, null, /* @__PURE__ */ import_react7.default.createElement(
+    return /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement("h2", null, "2048"), player ? /* @__PURE__ */ import_react8.default.createElement("p", null, "Your score: ", player.score) : /* @__PURE__ */ import_react8.default.createElement("p", null, "You are spectating"), isActivePlayer ? /* @__PURE__ */ import_react8.default.createElement("p", null, "Your turn") : /* @__PURE__ */ import_react8.default.createElement("p", null, activePlayer.name, "'s turn", " ", /* @__PURE__ */ import_react8.default.createElement(
+      "button",
+      {
+        onClick: () => kickMutation.mutate({ playerName: activePlayer.name })
+      },
+      "Kick"
+    )), /* @__PURE__ */ import_react8.default.createElement(GameBoardGrid, { game }), isActivePlayer && /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null, /* @__PURE__ */ import_react8.default.createElement(
       "button",
       {
         onClick: () => handleShift("N"),
         disabled: moveMutation.status === "loading"
       },
       "Up"
-    ), /* @__PURE__ */ import_react7.default.createElement(
+    ), /* @__PURE__ */ import_react8.default.createElement(
       "button",
       {
         onClick: () => handleShift("E"),
         disabled: moveMutation.status === "loading"
       },
       "Right"
-    ), /* @__PURE__ */ import_react7.default.createElement(
+    ), /* @__PURE__ */ import_react8.default.createElement(
       "button",
       {
         onClick: () => handleShift("S"),
         disabled: moveMutation.status === "loading"
       },
       "Down"
-    ), /* @__PURE__ */ import_react7.default.createElement(
+    ), /* @__PURE__ */ import_react8.default.createElement(
       "button",
       {
         onClick: () => handleShift("W"),
         disabled: moveMutation.status === "loading"
       },
       "Left"
-    )), /* @__PURE__ */ import_react7.default.createElement("div", null, "Scores:", /* @__PURE__ */ import_react7.default.createElement("ul", null, game.players.map((player2) => /* @__PURE__ */ import_react7.default.createElement("li", { key: player2.name }, player2.name, ": ", player2.score)))));
+    )), /* @__PURE__ */ import_react8.default.createElement("div", null, "Scores:", /* @__PURE__ */ import_react8.default.createElement("ul", null, game.players.map((player2) => /* @__PURE__ */ import_react8.default.createElement("li", { key: player2.name }, player2.name, ": ", player2.score)))));
   }
   function GameBoardGrid({ game }) {
-    return /* @__PURE__ */ import_react7.default.createElement(Grid, { size: game.size }, game.board.map((row, y2) => /* @__PURE__ */ import_react7.default.createElement(import_react7.Fragment, { key: y2 }, row.map((cell, x2) => /* @__PURE__ */ import_react7.default.createElement(Cell, { key: x2 }, cell)))));
+    return /* @__PURE__ */ import_react8.default.createElement(Grid, { size: game.size }, game.board.map((row, y2) => /* @__PURE__ */ import_react8.default.createElement(import_react8.Fragment, { key: y2 }, row.map((cell, x2) => /* @__PURE__ */ import_react8.default.createElement(Cell, { key: x2, style: { background: getColor(cell) } }, cell)))));
   }
   var Grid = styled_components_browser_esm_default.div`
   display: grid;
   grid-template-columns: repeat(${(props) => props.size}, 60px);
   grid-template-rows: repeat(${(props) => props.size}, 60px);
+  gap: 8px;
 `;
   var Cell = styled_components_browser_esm_default.div`
-  border: 1px solid #ccc;
-  font-size: 40px;
+  font-size: 30px;
   text-align: center;
+  font-weight: bold;
   line-height: 60px;
+  background: #89b6a2;
+  border-radius: 3px;
+  color: white;
 `;
+  function getColor(num) {
+    const n2 = Math.floor(Math.log2(num));
+    return colors[Math.min(n2 - 1, colors.length - 1)];
+  }
+  var colors = [
+    "#00A99F",
+    "#119EA1",
+    "#2194A4",
+    "#3289A6",
+    "#427EA9",
+    "#5373AB",
+    "#6369AE",
+    "#745EB0",
+    "#8553B2",
+    "#9549B5",
+    "#A63EB7",
+    "#B633BA",
+    "#C728BC",
+    "#D71EBF",
+    "#E813C1"
+  ];
 
   // client/src/Lobby.tsx
-  var import_react8 = __toESM(require_react());
-  function LobbyScreen({
-    game,
-    gameQueryKey
-  }) {
-    const { id } = useParams();
-    const queryClient = useQueryClient();
-    const { playerName, setPlayerName } = (0, import_react8.useContext)(PlayerContext);
-    const startMutation = useMutation({
-      mutationKey: ["start"],
-      mutationFn: async (data) => {
-        const res = await fetch(`/api/game/${id}`, {
-          method: "PUT",
-          body: JSON.stringify({ state: "STARTED" }),
-          headers: { "content-type": "application/json" }
-        });
-        if (res.status !== 200) {
-          throw new Error("Unexpected response status");
-        }
-        return res.json();
-      },
-      onSuccess: () => queryClient.invalidateQueries(gameQueryKey)
-    });
-    const joinMutation = useMutation({
-      mutationKey: ["join"],
-      // FIXME
-      mutationFn: async () => {
-        const res = await fetch(`/api/game/${id}/player`, {
-          method: "POST",
-          body: JSON.stringify({ playerName }),
-          headers: { "content-type": "application/json" }
-        });
-        if (res.status !== 200) {
-          throw new Error("Unexpected response status");
-        }
-        return res.json();
-      },
-      onSuccess: () => queryClient.invalidateQueries(gameQueryKey)
-    });
+  var import_react9 = __toESM(require_react());
+  function LobbyScreen({ game }) {
+    const { playerName, setPlayerName } = (0, import_react9.useContext)(PlayerContext);
+    const startMutation = useStartGameMutation(game.id);
+    const joinMutation = useJoinGameMutation(game.id);
     const joined = playerName && game.players.find((p) => p.name === playerName);
-    return /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement("h2", null, "Lobby"), /* @__PURE__ */ import_react8.default.createElement("p", null, "Game ID: ", id), /* @__PURE__ */ import_react8.default.createElement("p", null, "Players:"), /* @__PURE__ */ import_react8.default.createElement("ul", null, game.players.map((player) => /* @__PURE__ */ import_react8.default.createElement("li", { key: player.name }, player.name, " ", player.name === playerName ? "(You)" : null))), !joined ? /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null, /* @__PURE__ */ import_react8.default.createElement("label", null, "Your name:", " ", /* @__PURE__ */ import_react8.default.createElement(
+    return /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("h2", null, "Lobby"), /* @__PURE__ */ import_react9.default.createElement("p", null, /* @__PURE__ */ import_react9.default.createElement("a", { href: window.location.href }, "Game link"), " (share with friends)"), /* @__PURE__ */ import_react9.default.createElement("p", null, "Players:"), /* @__PURE__ */ import_react9.default.createElement("ul", null, game.players.map((player) => /* @__PURE__ */ import_react9.default.createElement("li", { key: player.name }, player.name, " ", player.name === playerName ? "(You)" : null))), !joined ? /* @__PURE__ */ import_react9.default.createElement(import_react9.default.Fragment, null, /* @__PURE__ */ import_react9.default.createElement("label", null, "Your name:", " ", /* @__PURE__ */ import_react9.default.createElement(
       "input",
       {
         value: playerName,
         onChange: (e2) => setPlayerName(e2.currentTarget.value)
       }
-    )), /* @__PURE__ */ import_react8.default.createElement(
+    )), /* @__PURE__ */ import_react9.default.createElement(
       "button",
       {
         onClick: () => joinMutation.mutate(),
         disabled: playerName === ""
       },
       "Join game"
-    )) : /* @__PURE__ */ import_react8.default.createElement("button", { onClick: () => startMutation.mutate() }, "Start"));
+    )) : /* @__PURE__ */ import_react9.default.createElement("button", { onClick: () => startMutation.mutate() }, "Start"));
   }
 
   // client/src/GameScreen.tsx
   function GameScreen() {
     const { id } = useParams();
-    const queryKey = (0, import_react9.useMemo)(() => ["game", id], [id]);
-    const gameQuery = useQuery({
-      queryKey,
-      queryFn: async () => {
-        const res = await fetch(`/api/game/${id}`);
-        if (res.status !== 200) {
-          throw new Error("Unexpected response status");
-        }
-        return res.json();
-      },
-      cacheTime: 0,
-      refetchInterval: 1e3
-    });
-    if (gameQuery.status === "loading") {
-      return /* @__PURE__ */ import_react9.default.createElement("p", null, "Loading...");
+    const gameQuery = usePollGameQuery(id);
+    if (gameQuery.status === "loading" || gameQuery.status === "idle") {
+      return /* @__PURE__ */ import_react10.default.createElement("p", null, "Loading...");
     }
     if (gameQuery.status === "error") {
-      return /* @__PURE__ */ import_react9.default.createElement("p", null, "Error! ", String(gameQuery.error));
+      return /* @__PURE__ */ import_react10.default.createElement("p", null, "Error! ", String(gameQuery.error));
     }
-    if (gameQuery.status === "idle") {
-      return /* @__PURE__ */ import_react9.default.createElement(import_react9.default.Fragment, null, "Idle");
-    }
+    const game = { ...gameQuery.data, id };
     switch (gameQuery.data.state) {
       case "LOBBY":
-        return /* @__PURE__ */ import_react9.default.createElement(LobbyScreen, { game: gameQuery.data, gameQueryKey: queryKey });
+        return /* @__PURE__ */ import_react10.default.createElement(LobbyScreen, { game });
       case "STARTED":
-        return /* @__PURE__ */ import_react9.default.createElement(GameBoard, { game: gameQuery.data, gameQueryKey: queryKey });
+        return /* @__PURE__ */ import_react10.default.createElement(GameBoard, { game });
       case "ENDED":
-        return /* @__PURE__ */ import_react9.default.createElement("p", null, "This game has ended");
+        return /* @__PURE__ */ import_react10.default.createElement("p", null, "This game has ended");
     }
   }
 
@@ -29674,18 +29714,18 @@
   var client = new QueryClient();
   var LOCAL_STORE_KEY = "2048PlayerName";
   function App() {
-    const [playerName, setPlayerName] = (0, import_react10.useState)(
+    const [playerName, setPlayerName] = (0, import_react11.useState)(
       localStorage.getItem(LOCAL_STORE_KEY) ?? ""
     );
-    (0, import_react10.useEffect)(() => {
+    (0, import_react11.useEffect)(() => {
       localStorage.setItem(LOCAL_STORE_KEY, playerName);
     }, [playerName]);
-    return /* @__PURE__ */ import_react10.default.createElement(QueryClientProvider, { client }, /* @__PURE__ */ import_react10.default.createElement(PlayerContext.Provider, { value: { playerName, setPlayerName } }, /* @__PURE__ */ import_react10.default.createElement(BrowserRouter, null, /* @__PURE__ */ import_react10.default.createElement(Routes, null, /* @__PURE__ */ import_react10.default.createElement(Route, { path: "/game/:id", element: /* @__PURE__ */ import_react10.default.createElement(GameScreen, null) }), /* @__PURE__ */ import_react10.default.createElement(Route, { path: "/", element: /* @__PURE__ */ import_react10.default.createElement(StartScreen, null) })))));
+    return /* @__PURE__ */ import_react11.default.createElement(QueryClientProvider, { client }, /* @__PURE__ */ import_react11.default.createElement(PlayerContext.Provider, { value: { playerName, setPlayerName } }, /* @__PURE__ */ import_react11.default.createElement(BrowserRouter, null, /* @__PURE__ */ import_react11.default.createElement(Routes, null, /* @__PURE__ */ import_react11.default.createElement(Route, { path: "/game/:id", element: /* @__PURE__ */ import_react11.default.createElement(GameScreen, null) }), /* @__PURE__ */ import_react11.default.createElement(Route, { path: "/", element: /* @__PURE__ */ import_react11.default.createElement(StartScreen, null) })))));
   }
   var container = document.getElementById("root");
   var root = (0, import_client.createRoot)(container);
-  root.render(/* @__PURE__ */ import_react10.default.createElement(App, null));
-  var PlayerContext = (0, import_react10.createContext)({ playerName: "", setPlayerName: () => void 0 });
+  root.render(/* @__PURE__ */ import_react11.default.createElement(App, null));
+  var PlayerContext = (0, import_react11.createContext)({ playerName: "", setPlayerName: () => void 0 });
 })();
 /*! Bundled license information:
 

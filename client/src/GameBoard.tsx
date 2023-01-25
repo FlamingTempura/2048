@@ -1,55 +1,12 @@
-import React, { Fragment, useContext, useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import React, { Fragment, useContext } from "react";
 import styled from "styled-components";
-import { Direction, Game } from "../../common/types";
+import { Direction, Game, GameWithId } from "../../common/types";
+import { useKickMutation, useMoveMutation } from "./api";
 import { PlayerContext } from "./App";
 
-export function GameBoard({
-  game,
-  gameQueryKey,
-}: {
-  game: Game;
-  gameQueryKey: string[];
-}) {
-  const { id } = useParams();
-  const queryClient = useQueryClient();
-
-  const moveMutation = useMutation<
-    undefined,
-    unknown,
-    { direction: Direction }
-  >({
-    mutationKey: ["move"],
-    mutationFn: async (data) => {
-      const res = await fetch(`/api/game/${id}/move`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "content-type": "application/json" },
-      });
-      if (res.status !== 200) {
-        throw new Error("Unexpected response status");
-      }
-      return res.json();
-    },
-    onSuccess: () => queryClient.invalidateQueries(gameQueryKey),
-  });
-
-  const kickMutation = useMutation<undefined, unknown, void>({
-    mutationKey: ["kick"],
-    mutationFn: async (data) => {
-      const res = await fetch(`/api/game/${id}/player/${activePlayer.name}`, {
-        method: "DELETE",
-        body: JSON.stringify(data),
-        headers: { "content-type": "application/json" },
-      });
-      if (res.status !== 200) {
-        throw new Error("Unexpected response status");
-      }
-      return res.json();
-    },
-    onSuccess: () => queryClient.invalidateQueries(gameQueryKey),
-  });
+export function GameBoard({ game }: { game: GameWithId }) {
+  const moveMutation = useMoveMutation(game.id);
+  const kickMutation = useKickMutation(game.id);
 
   const handleShift = async (direction: Direction) => {
     await moveMutation.mutate({ direction });
@@ -64,7 +21,7 @@ export function GameBoard({
 
   return (
     <div>
-      <h2>The game {id}</h2>
+      <h2>2048</h2>
 
       {player ? <p>Your score: {player.score}</p> : <p>You are spectating</p>}
 
@@ -73,7 +30,13 @@ export function GameBoard({
       ) : (
         <p>
           {activePlayer.name}'s turn{" "}
-          <button onClick={() => kickMutation.mutate()}>Kick</button>
+          <button
+            onClick={() =>
+              kickMutation.mutate({ playerName: activePlayer.name })
+            }
+          >
+            Kick
+          </button>
         </p>
       )}
 
@@ -127,7 +90,9 @@ function GameBoardGrid({ game }: { game: Game }) {
       {game.board.map((row, y) => (
         <Fragment key={y}>
           {row.map((cell, x) => (
-            <Cell key={x}>{cell}</Cell>
+            <Cell key={x} style={{ background: getColor(cell) }}>
+              {cell}
+            </Cell>
           ))}
         </Fragment>
       ))}
@@ -139,11 +104,38 @@ const Grid = styled.div<{ size: number }>`
   display: grid;
   grid-template-columns: repeat(${(props) => props.size}, 60px);
   grid-template-rows: repeat(${(props) => props.size}, 60px);
+  gap: 8px;
 `;
 
 const Cell = styled.div`
-  border: 1px solid #ccc;
-  font-size: 40px;
+  font-size: 30px;
   text-align: center;
+  font-weight: bold;
   line-height: 60px;
+  background: #89b6a2;
+  border-radius: 3px;
+  color: white;
 `;
+
+function getColor(num: number): string {
+  const n = Math.floor(Math.log2(num));
+  return colors[Math.min(n - 1, colors.length - 1)];
+}
+
+const colors = [
+  "#00A99F",
+  "#119EA1",
+  "#2194A4",
+  "#3289A6",
+  "#427EA9",
+  "#5373AB",
+  "#6369AE",
+  "#745EB0",
+  "#8553B2",
+  "#9549B5",
+  "#A63EB7",
+  "#B633BA",
+  "#C728BC",
+  "#D71EBF",
+  "#E813C1",
+];
