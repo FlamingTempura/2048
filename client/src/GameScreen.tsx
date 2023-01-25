@@ -8,8 +8,10 @@ export function GameScreen() {
   const { id } = useParams();
   const queryClient = useQueryClient();
 
+  const queryKey = useMemo(() => ["game", id], [id]);
+
   const gameQuery = useQuery<undefined, unknown, Game>({
-    queryKey: ["game", id],
+    queryKey,
     queryFn: async () => {
       const res = await fetch(`/api/game/${id}`);
       if (res.status !== 200) {
@@ -38,11 +40,12 @@ export function GameScreen() {
       }
       return res.json();
     },
+    onSuccess: () => queryClient.invalidateQueries(queryKey),
   });
 
-  const handleDown = async () => {
-    await moveMutation.mutate({ direction: "S" });
-    queryClient.invalidateQueries(["game", id]);
+  const handleShift = async (direction: Direction) => {
+    await moveMutation.mutate({ direction });
+    console.log("invalidating");
   };
 
   if (gameQuery.status === "loading") {
@@ -60,18 +63,38 @@ export function GameScreen() {
     <div>
       <h2>The game {id}</h2>
       <GameBoard game={gameQuery.data} />
-      <button onClick={handleDown} disabled={moveMutation.status === "loading"}>
+      <button
+        onClick={() => handleShift("N")}
+        disabled={moveMutation.status === "loading"}
+      >
+        Up
+      </button>
+      <button
+        onClick={() => handleShift("E")}
+        disabled={moveMutation.status === "loading"}
+      >
+        Right
+      </button>
+      <button
+        onClick={() => handleShift("S")}
+        disabled={moveMutation.status === "loading"}
+      >
         Down
+      </button>
+      <button
+        onClick={() => handleShift("W")}
+        disabled={moveMutation.status === "loading"}
+      >
+        Left
       </button>
     </div>
   );
 }
 
 function GameBoard({ game }: { game: Game }) {
-  const board = useMemo(() => getBoardState(game), [game]);
   return (
     <Grid size={game.size}>
-      {board.map((row, y) => (
+      {game.board.map((row, y) => (
         <Fragment key={y}>
           {row.map((cell, x) => (
             <Cell key={x}>{cell}</Cell>
@@ -81,53 +104,6 @@ function GameBoard({ game }: { game: Game }) {
     </Grid>
   );
 }
-
-function getBoardState(game: Game): GameGrid {
-  const grid = emptyGrid(game.size);
-  grid[game.startCoordinate[1]][game.startCoordinate[0]] = 2;
-
-  for (const move of game.moveHistory) {
-    switch (move.direction) {
-      case "S":
-        for (let x = 0; x < game.size; x++) {
-          let newCol = grid.map((row) => row[x]).filter((cell) => cell !== 0);
-          let skipNext = false;
-
-          for (let i = 1; i < newCol.length; i++) {
-            if (newCol[i] === newCol[i - 1]) {
-              newCol[i - 1] = 0;
-              newCol[i] *= 2;
-              skipNext = true;
-            } else {
-              skipNext = false;
-            }
-          }
-
-          for (let y = 0; y < game.size; y++) {
-            grid[y][x] = newCol[y - newCol.length] ?? 0;
-          }
-        }
-      default:
-      // TODO
-    }
-  }
-
-  return grid;
-}
-
-function emptyGrid(size: number): GameGrid {
-  const grid: number[][] = [];
-
-  for (let row = 0; row < size; row++) {
-    grid[row] = [];
-    for (let col = 0; col < size; col++) {
-      grid[row][col] = 0;
-    }
-  }
-  return grid;
-}
-
-type GameGrid = number[][];
 
 const Grid = styled.div<{ size: number }>`
   display: grid;

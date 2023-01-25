@@ -1,3 +1,7 @@
 {
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "jsx": "react"
+    },
     "include": ["build.ts", "server/src/**/*", "client/src/**/*", "common/**/*", "node_modules/**/*"]
 }

@@ -1033,12 +1033,12 @@ var require_debug = __commonJS({
       function debug() {
         if (!debug.enabled)
           return;
-        var self = debug;
+        var self2 = debug;
         var curr = +/* @__PURE__ */ new Date();
         var ms = curr - (prevTime || curr);
-        self.diff = ms;
-        self.prev = prevTime;
-        self.curr = curr;
+        self2.diff = ms;
+        self2.prev = prevTime;
+        self2.curr = curr;
         prevTime = curr;
         var args = new Array(arguments.length);
         for (var i = 0; i < args.length; i++) {
@@ -1056,15 +1056,15 @@ var require_debug = __commonJS({
           var formatter = exports.formatters[format];
           if ("function" === typeof formatter) {
             var val = args[index];
-            match = formatter.call(self, val);
+            match = formatter.call(self2, val);
             args.splice(index, 1);
             index--;
           }
           return match;
         });
-        exports.formatArgs.call(self, args);
+        exports.formatArgs.call(self2, args);
         var logFn = debug.log || exports.log || console.log.bind(console);
-        logFn.apply(self, args);
+        logFn.apply(self2, args);
       }
       debug.namespace = namespace;
       debug.enabled = exports.enabled(namespace);
@@ -16727,12 +16727,12 @@ var require_debug2 = __commonJS({
       function debug() {
         if (!debug.enabled)
           return;
-        var self = debug;
+        var self2 = debug;
         var curr = +/* @__PURE__ */ new Date();
         var ms = curr - (prevTime || curr);
-        self.diff = ms;
-        self.prev = prevTime;
-        self.curr = curr;
+        self2.diff = ms;
+        self2.prev = prevTime;
+        self2.curr = curr;
         prevTime = curr;
         var args = new Array(arguments.length);
         for (var i = 0; i < args.length; i++) {
@@ -16750,15 +16750,15 @@ var require_debug2 = __commonJS({
           var formatter = exports.formatters[format];
           if ("function" === typeof formatter) {
             var val = args[index];
-            match = formatter.call(self, val);
+            match = formatter.call(self2, val);
             args.splice(index, 1);
             index--;
           }
           return match;
         });
-        exports.formatArgs.call(self, args);
+        exports.formatArgs.call(self2, args);
         var logFn = debug.log || exports.log || console.log.bind(console);
-        logFn.apply(self, args);
+        logFn.apply(self2, args);
       }
       debug.namespace = namespace;
       debug.enabled = exports.enabled(namespace);
@@ -17446,12 +17446,12 @@ var require_debug3 = __commonJS({
       function debug() {
         if (!debug.enabled)
           return;
-        var self = debug;
+        var self2 = debug;
         var curr = +/* @__PURE__ */ new Date();
         var ms = curr - (prevTime || curr);
-        self.diff = ms;
-        self.prev = prevTime;
-        self.curr = curr;
+        self2.diff = ms;
+        self2.prev = prevTime;
+        self2.curr = curr;
         prevTime = curr;
         var args = new Array(arguments.length);
         for (var i = 0; i < args.length; i++) {
@@ -17469,15 +17469,15 @@ var require_debug3 = __commonJS({
           var formatter = exports.formatters[format];
           if ("function" === typeof formatter) {
             var val = args[index];
-            match = formatter.call(self, val);
+            match = formatter.call(self2, val);
             args.splice(index, 1);
             index--;
           }
           return match;
         });
-        exports.formatArgs.call(self, args);
+        exports.formatArgs.call(self2, args);
         var logFn = debug.log || exports.log || console.log.bind(console);
-        logFn.apply(self, args);
+        logFn.apply(self2, args);
       }
       debug.namespace = namespace;
       debug.enabled = exports.enabled(namespace);
@@ -18186,7 +18186,7 @@ var require_router = __commonJS({
       return this;
     };
     proto.handle = function handle(req, res, out) {
-      var self = this;
+      var self2 = this;
       debug("dispatching %s %s", req.method, req.url);
       var idx = 0;
       var protohost = getProtohost(req.url) || "";
@@ -18195,7 +18195,7 @@ var require_router = __commonJS({
       var sync = 0;
       var paramcalled = {};
       var options = [];
-      var stack = self.stack;
+      var stack = self2.stack;
       var parentParams = req.params;
       var parentUrl = req.baseUrl || "";
       var done = restore(out, req, "baseUrl", "next", "params");
@@ -18271,9 +18271,9 @@ var require_router = __commonJS({
         if (route) {
           req.route = route;
         }
-        req.params = self.mergeParams ? mergeParams(layer.params, parentParams) : layer.params;
+        req.params = self2.mergeParams ? mergeParams(layer.params, parentParams) : layer.params;
         var layerPath = layer.path;
-        self.process_params(layer, paramcalled, req, res, function(err2) {
+        self2.process_params(layer, paramcalled, req, res, function(err2) {
           if (err2) {
             next(layerError || err2);
           } else if (route) {
@@ -18576,7 +18576,7 @@ var require_view = __commonJS({
     var dirname = path.dirname;
     var basename = path.basename;
     var extname = path.extname;
-    var join2 = path.join;
+    var join = path.join;
     var resolve2 = path.resolve;
     module2.exports = View;
     function View(name, options) {
@@ -18624,12 +18624,12 @@ var require_view = __commonJS({
     };
     View.prototype.resolve = function resolve3(dir, file) {
       var ext = this.ext;
-      var path2 = join2(dir, file);
+      var path2 = join(dir, file);
       var stat = tryStat(path2);
       if (stat && stat.isFile()) {
         return path2;
       }
-      path2 = join2(dir, basename(file, ext), "index" + ext);
+      path2 = join(dir, basename(file, ext), "index" + ext);
       stat = tryStat(path2);
       if (stat && stat.isFile()) {
         return path2;
@@ -18994,12 +18994,12 @@ var require_debug4 = __commonJS({
       function debug() {
         if (!debug.enabled)
           return;
-        var self = debug;
+        var self2 = debug;
         var curr = +/* @__PURE__ */ new Date();
         var ms = curr - (prevTime || curr);
-        self.diff = ms;
-        self.prev = prevTime;
-        self.curr = curr;
+        self2.diff = ms;
+        self2.prev = prevTime;
+        self2.curr = curr;
         prevTime = curr;
         var args = new Array(arguments.length);
         for (var i = 0; i < args.length; i++) {
@@ -19017,15 +19017,15 @@ var require_debug4 = __commonJS({
           var formatter = exports.formatters[format];
           if ("function" === typeof formatter) {
             var val = args[index];
-            match = formatter.call(self, val);
+            match = formatter.call(self2, val);
             args.splice(index, 1);
             index--;
           }
           return match;
         });
-        exports.formatArgs.call(self, args);
+        exports.formatArgs.call(self2, args);
         var logFn = debug.log || exports.log || console.log.bind(console);
-        logFn.apply(self, args);
+        logFn.apply(self2, args);
       }
       debug.namespace = namespace;
       debug.enabled = exports.enabled(namespace);
@@ -19696,7 +19696,7 @@ var require_send = __commonJS({
     var Stream = require("stream");
     var util = require("util");
     var extname = path.extname;
-    var join2 = path.join;
+    var join = path.join;
     var normalize = path.normalize;
     var resolve2 = path.resolve;
     var sep = path.sep;
@@ -19915,7 +19915,7 @@ var require_send = __commonJS({
           return res;
         }
         parts = path2.split(sep);
-        path2 = normalize(join2(root, path2));
+        path2 = normalize(join(root, path2));
       } else {
         if (UP_PATH_REGEXP.test(path2)) {
           debug('malicious path "%s"', path2);
@@ -20018,59 +20018,59 @@ var require_send = __commonJS({
     };
     SendStream.prototype.sendFile = function sendFile(path2) {
       var i = 0;
-      var self = this;
+      var self2 = this;
       debug('stat "%s"', path2);
       fs.stat(path2, function onstat(err, stat) {
         if (err && err.code === "ENOENT" && !extname(path2) && path2[path2.length - 1] !== sep) {
           return next(err);
         }
         if (err)
-          return self.onStatError(err);
+          return self2.onStatError(err);
         if (stat.isDirectory())
-          return self.redirect(path2);
-        self.emit("file", path2, stat);
-        self.send(path2, stat);
+          return self2.redirect(path2);
+        self2.emit("file", path2, stat);
+        self2.send(path2, stat);
       });
       function next(err) {
-        if (self._extensions.length <= i) {
-          return err ? self.onStatError(err) : self.error(404);
+        if (self2._extensions.length <= i) {
+          return err ? self2.onStatError(err) : self2.error(404);
         }
-        var p = path2 + "." + self._extensions[i++];
+        var p = path2 + "." + self2._extensions[i++];
         debug('stat "%s"', p);
         fs.stat(p, function(err2, stat) {
           if (err2)
             return next(err2);
           if (stat.isDirectory())
             return next();
-          self.emit("file", p, stat);
-          self.send(p, stat);
+          self2.emit("file", p, stat);
+          self2.send(p, stat);
         });
       }
     };
     SendStream.prototype.sendIndex = function sendIndex(path2) {
       var i = -1;
-      var self = this;
+      var self2 = this;
       function next(err) {
-        if (++i >= self._index.length) {
+        if (++i >= self2._index.length) {
           if (err)
-            return self.onStatError(err);
-          return self.error(404);
+            return self2.onStatError(err);
+          return self2.error(404);
         }
-        var p = join2(path2, self._index[i]);
+        var p = join(path2, self2._index[i]);
         debug('stat "%s"', p);
         fs.stat(p, function(err2, stat) {
           if (err2)
             return next(err2);
           if (stat.isDirectory())
             return next();
-          self.emit("file", p, stat);
-          self.send(p, stat);
+          self2.emit("file", p, stat);
+          self2.send(p, stat);
         });
       }
       next();
     };
     SendStream.prototype.stream = function stream(path2, options) {
-      var self = this;
+      var self2 = this;
       var res = this.res;
       var stream2 = fs.createReadStream(path2, options);
       this.emit("stream", stream2);
@@ -20081,10 +20081,10 @@ var require_send = __commonJS({
       onFinished(res, cleanup);
       stream2.on("error", function onerror(err) {
         cleanup();
-        self.onStatError(err);
+        self2.onStatError(err);
       });
       stream2.on("end", function onend() {
-        self.emit("end");
+        self2.emit("end");
       });
     };
     SendStream.prototype.type = function type(path2) {
@@ -20288,17 +20288,17 @@ var require_ipaddr = __commonJS({
         root["ipaddr"] = ipaddr;
       }
       matchCIDR = function(first, second, partSize, cidrBits) {
-        var part, shift;
+        var part, shift2;
         if (first.length !== second.length) {
           throw new Error("ipaddr: cannot match CIDR for objects with different lengths");
         }
         part = 0;
         while (cidrBits > 0) {
-          shift = partSize - cidrBits;
-          if (shift < 0) {
-            shift = 0;
+          shift2 = partSize - cidrBits;
+          if (shift2 < 0) {
+            shift2 = 0;
           }
-          if (first[part] >> shift !== second[part] >> shift) {
+          if (first[part] >> shift2 !== second[part] >> shift2) {
             return false;
           }
           cidrBits -= partSize;
@@ -20419,7 +20419,7 @@ var require_ipaddr = __commonJS({
         longValue: new RegExp("^" + ipv4Part + "$", "i")
       };
       ipaddr.IPv4.parser = function(string) {
-        var match, parseIntAuto, part, shift, value;
+        var match, parseIntAuto, part, shift2, value;
         parseIntAuto = function(string2) {
           if (string2[0] === "0" && string2[1] !== "x") {
             return parseInt(string2, 8);
@@ -20446,8 +20446,8 @@ var require_ipaddr = __commonJS({
           return function() {
             var k, results;
             results = [];
-            for (shift = k = 0; k <= 24; shift = k += 8) {
-              results.push(value >> shift & 255);
+            for (shift2 = k = 0; k <= 24; shift2 = k += 8) {
+              results.push(value >> shift2 & 255);
             }
             return results;
           }().reverse();
@@ -22911,16 +22911,16 @@ var require_response = __commonJS({
       var done = callback;
       var opts = options || {};
       var req = this.req;
-      var self = this;
+      var self2 = this;
       if (typeof options === "function") {
         done = options;
         opts = {};
       }
-      opts._locals = self.locals;
+      opts._locals = self2.locals;
       done = done || function(err, str) {
         if (err)
           return req.next(err);
-        self.send(str);
+        self2.send(str);
       };
       app2.render(view, opts, done);
     };
@@ -23200,12 +23200,617 @@ var require_express2 = __commonJS({
   }
 });
 
+// node_modules/lodash/_baseRandom.js
+var require_baseRandom = __commonJS({
+  "node_modules/lodash/_baseRandom.js"(exports, module2) {
+    var nativeFloor = Math.floor;
+    var nativeRandom = Math.random;
+    function baseRandom(lower, upper) {
+      return lower + nativeFloor(nativeRandom() * (upper - lower + 1));
+    }
+    module2.exports = baseRandom;
+  }
+});
+
+// node_modules/lodash/_arraySample.js
+var require_arraySample = __commonJS({
+  "node_modules/lodash/_arraySample.js"(exports, module2) {
+    var baseRandom = require_baseRandom();
+    function arraySample(array) {
+      var length = array.length;
+      return length ? array[baseRandom(0, length - 1)] : void 0;
+    }
+    module2.exports = arraySample;
+  }
+});
+
+// node_modules/lodash/_arrayMap.js
+var require_arrayMap = __commonJS({
+  "node_modules/lodash/_arrayMap.js"(exports, module2) {
+    function arrayMap(array, iteratee) {
+      var index = -1, length = array == null ? 0 : array.length, result = Array(length);
+      while (++index < length) {
+        result[index] = iteratee(array[index], index, array);
+      }
+      return result;
+    }
+    module2.exports = arrayMap;
+  }
+});
+
+// node_modules/lodash/_baseValues.js
+var require_baseValues = __commonJS({
+  "node_modules/lodash/_baseValues.js"(exports, module2) {
+    var arrayMap = require_arrayMap();
+    function baseValues(object, props) {
+      return arrayMap(props, function(key) {
+        return object[key];
+      });
+    }
+    module2.exports = baseValues;
+  }
+});
+
+// node_modules/lodash/_baseTimes.js
+var require_baseTimes = __commonJS({
+  "node_modules/lodash/_baseTimes.js"(exports, module2) {
+    function baseTimes(n, iteratee) {
+      var index = -1, result = Array(n);
+      while (++index < n) {
+        result[index] = iteratee(index);
+      }
+      return result;
+    }
+    module2.exports = baseTimes;
+  }
+});
+
+// node_modules/lodash/_freeGlobal.js
+var require_freeGlobal = __commonJS({
+  "node_modules/lodash/_freeGlobal.js"(exports, module2) {
+    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+    module2.exports = freeGlobal;
+  }
+});
+
+// node_modules/lodash/_root.js
+var require_root = __commonJS({
+  "node_modules/lodash/_root.js"(exports, module2) {
+    var freeGlobal = require_freeGlobal();
+    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+    var root = freeGlobal || freeSelf || Function("return this")();
+    module2.exports = root;
+  }
+});
+
+// node_modules/lodash/_Symbol.js
+var require_Symbol = __commonJS({
+  "node_modules/lodash/_Symbol.js"(exports, module2) {
+    var root = require_root();
+    var Symbol2 = root.Symbol;
+    module2.exports = Symbol2;
+  }
+});
+
+// node_modules/lodash/_getRawTag.js
+var require_getRawTag = __commonJS({
+  "node_modules/lodash/_getRawTag.js"(exports, module2) {
+    var Symbol2 = require_Symbol();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var nativeObjectToString = objectProto.toString;
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+    function getRawTag(value) {
+      var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+      try {
+        value[symToStringTag] = void 0;
+        var unmasked = true;
+      } catch (e) {
+      }
+      var result = nativeObjectToString.call(value);
+      if (unmasked) {
+        if (isOwn) {
+          value[symToStringTag] = tag;
+        } else {
+          delete value[symToStringTag];
+        }
+      }
+      return result;
+    }
+    module2.exports = getRawTag;
+  }
+});
+
+// node_modules/lodash/_objectToString.js
+var require_objectToString = __commonJS({
+  "node_modules/lodash/_objectToString.js"(exports, module2) {
+    var objectProto = Object.prototype;
+    var nativeObjectToString = objectProto.toString;
+    function objectToString(value) {
+      return nativeObjectToString.call(value);
+    }
+    module2.exports = objectToString;
+  }
+});
+
+// node_modules/lodash/_baseGetTag.js
+var require_baseGetTag = __commonJS({
+  "node_modules/lodash/_baseGetTag.js"(exports, module2) {
+    var Symbol2 = require_Symbol();
+    var getRawTag = require_getRawTag();
+    var objectToString = require_objectToString();
+    var nullTag = "[object Null]";
+    var undefinedTag = "[object Undefined]";
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+    function baseGetTag(value) {
+      if (value == null) {
+        return value === void 0 ? undefinedTag : nullTag;
+      }
+      return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
+    }
+    module2.exports = baseGetTag;
+  }
+});
+
+// node_modules/lodash/isObjectLike.js
+var require_isObjectLike = __commonJS({
+  "node_modules/lodash/isObjectLike.js"(exports, module2) {
+    function isObjectLike(value) {
+      return value != null && typeof value == "object";
+    }
+    module2.exports = isObjectLike;
+  }
+});
+
+// node_modules/lodash/_baseIsArguments.js
+var require_baseIsArguments = __commonJS({
+  "node_modules/lodash/_baseIsArguments.js"(exports, module2) {
+    var baseGetTag = require_baseGetTag();
+    var isObjectLike = require_isObjectLike();
+    var argsTag = "[object Arguments]";
+    function baseIsArguments(value) {
+      return isObjectLike(value) && baseGetTag(value) == argsTag;
+    }
+    module2.exports = baseIsArguments;
+  }
+});
+
+// node_modules/lodash/isArguments.js
+var require_isArguments = __commonJS({
+  "node_modules/lodash/isArguments.js"(exports, module2) {
+    var baseIsArguments = require_baseIsArguments();
+    var isObjectLike = require_isObjectLike();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+    var isArguments = baseIsArguments(function() {
+      return arguments;
+    }()) ? baseIsArguments : function(value) {
+      return isObjectLike(value) && hasOwnProperty.call(value, "callee") && !propertyIsEnumerable.call(value, "callee");
+    };
+    module2.exports = isArguments;
+  }
+});
+
+// node_modules/lodash/isArray.js
+var require_isArray = __commonJS({
+  "node_modules/lodash/isArray.js"(exports, module2) {
+    var isArray = Array.isArray;
+    module2.exports = isArray;
+  }
+});
+
+// node_modules/lodash/stubFalse.js
+var require_stubFalse = __commonJS({
+  "node_modules/lodash/stubFalse.js"(exports, module2) {
+    function stubFalse() {
+      return false;
+    }
+    module2.exports = stubFalse;
+  }
+});
+
+// node_modules/lodash/isBuffer.js
+var require_isBuffer = __commonJS({
+  "node_modules/lodash/isBuffer.js"(exports, module2) {
+    var root = require_root();
+    var stubFalse = require_stubFalse();
+    var freeExports = typeof exports == "object" && exports && !exports.nodeType && exports;
+    var freeModule = freeExports && typeof module2 == "object" && module2 && !module2.nodeType && module2;
+    var moduleExports = freeModule && freeModule.exports === freeExports;
+    var Buffer2 = moduleExports ? root.Buffer : void 0;
+    var nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : void 0;
+    var isBuffer = nativeIsBuffer || stubFalse;
+    module2.exports = isBuffer;
+  }
+});
+
+// node_modules/lodash/_isIndex.js
+var require_isIndex = __commonJS({
+  "node_modules/lodash/_isIndex.js"(exports, module2) {
+    var MAX_SAFE_INTEGER = 9007199254740991;
+    var reIsUint = /^(?:0|[1-9]\d*)$/;
+    function isIndex(value, length) {
+      var type = typeof value;
+      length = length == null ? MAX_SAFE_INTEGER : length;
+      return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+    }
+    module2.exports = isIndex;
+  }
+});
+
+// node_modules/lodash/isLength.js
+var require_isLength = __commonJS({
+  "node_modules/lodash/isLength.js"(exports, module2) {
+    var MAX_SAFE_INTEGER = 9007199254740991;
+    function isLength(value) {
+      return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+    }
+    module2.exports = isLength;
+  }
+});
+
+// node_modules/lodash/_baseIsTypedArray.js
+var require_baseIsTypedArray = __commonJS({
+  "node_modules/lodash/_baseIsTypedArray.js"(exports, module2) {
+    var baseGetTag = require_baseGetTag();
+    var isLength = require_isLength();
+    var isObjectLike = require_isObjectLike();
+    var argsTag = "[object Arguments]";
+    var arrayTag = "[object Array]";
+    var boolTag = "[object Boolean]";
+    var dateTag = "[object Date]";
+    var errorTag = "[object Error]";
+    var funcTag = "[object Function]";
+    var mapTag = "[object Map]";
+    var numberTag = "[object Number]";
+    var objectTag = "[object Object]";
+    var regexpTag = "[object RegExp]";
+    var setTag = "[object Set]";
+    var stringTag = "[object String]";
+    var weakMapTag = "[object WeakMap]";
+    var arrayBufferTag = "[object ArrayBuffer]";
+    var dataViewTag = "[object DataView]";
+    var float32Tag = "[object Float32Array]";
+    var float64Tag = "[object Float64Array]";
+    var int8Tag = "[object Int8Array]";
+    var int16Tag = "[object Int16Array]";
+    var int32Tag = "[object Int32Array]";
+    var uint8Tag = "[object Uint8Array]";
+    var uint8ClampedTag = "[object Uint8ClampedArray]";
+    var uint16Tag = "[object Uint16Array]";
+    var uint32Tag = "[object Uint32Array]";
+    var typedArrayTags = {};
+    typedArrayTags[float32Tag] = typedArrayTags[float64Tag] = typedArrayTags[int8Tag] = typedArrayTags[int16Tag] = typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] = typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] = typedArrayTags[uint32Tag] = true;
+    typedArrayTags[argsTag] = typedArrayTags[arrayTag] = typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] = typedArrayTags[dataViewTag] = typedArrayTags[dateTag] = typedArrayTags[errorTag] = typedArrayTags[funcTag] = typedArrayTags[mapTag] = typedArrayTags[numberTag] = typedArrayTags[objectTag] = typedArrayTags[regexpTag] = typedArrayTags[setTag] = typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+    function baseIsTypedArray(value) {
+      return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
+    }
+    module2.exports = baseIsTypedArray;
+  }
+});
+
+// node_modules/lodash/_baseUnary.js
+var require_baseUnary = __commonJS({
+  "node_modules/lodash/_baseUnary.js"(exports, module2) {
+    function baseUnary(func) {
+      return function(value) {
+        return func(value);
+      };
+    }
+    module2.exports = baseUnary;
+  }
+});
+
+// node_modules/lodash/_nodeUtil.js
+var require_nodeUtil = __commonJS({
+  "node_modules/lodash/_nodeUtil.js"(exports, module2) {
+    var freeGlobal = require_freeGlobal();
+    var freeExports = typeof exports == "object" && exports && !exports.nodeType && exports;
+    var freeModule = freeExports && typeof module2 == "object" && module2 && !module2.nodeType && module2;
+    var moduleExports = freeModule && freeModule.exports === freeExports;
+    var freeProcess = moduleExports && freeGlobal.process;
+    var nodeUtil = function() {
+      try {
+        var types = freeModule && freeModule.require && freeModule.require("util").types;
+        if (types) {
+          return types;
+        }
+        return freeProcess && freeProcess.binding && freeProcess.binding("util");
+      } catch (e) {
+      }
+    }();
+    module2.exports = nodeUtil;
+  }
+});
+
+// node_modules/lodash/isTypedArray.js
+var require_isTypedArray = __commonJS({
+  "node_modules/lodash/isTypedArray.js"(exports, module2) {
+    var baseIsTypedArray = require_baseIsTypedArray();
+    var baseUnary = require_baseUnary();
+    var nodeUtil = require_nodeUtil();
+    var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
+    var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
+    module2.exports = isTypedArray;
+  }
+});
+
+// node_modules/lodash/_arrayLikeKeys.js
+var require_arrayLikeKeys = __commonJS({
+  "node_modules/lodash/_arrayLikeKeys.js"(exports, module2) {
+    var baseTimes = require_baseTimes();
+    var isArguments = require_isArguments();
+    var isArray = require_isArray();
+    var isBuffer = require_isBuffer();
+    var isIndex = require_isIndex();
+    var isTypedArray = require_isTypedArray();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    function arrayLikeKeys(value, inherited) {
+      var isArr = isArray(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes(value.length, String) : [], length = result.length;
+      for (var key in value) {
+        if ((inherited || hasOwnProperty.call(value, key)) && !(skipIndexes && // Safari 9 has enumerable `arguments.length` in strict mode.
+        (key == "length" || // Node.js 0.10 has enumerable non-index properties on buffers.
+        isBuff && (key == "offset" || key == "parent") || // PhantomJS 2 has enumerable non-index properties on typed arrays.
+        isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || // Skip index properties.
+        isIndex(key, length)))) {
+          result.push(key);
+        }
+      }
+      return result;
+    }
+    module2.exports = arrayLikeKeys;
+  }
+});
+
+// node_modules/lodash/_isPrototype.js
+var require_isPrototype = __commonJS({
+  "node_modules/lodash/_isPrototype.js"(exports, module2) {
+    var objectProto = Object.prototype;
+    function isPrototype(value) {
+      var Ctor = value && value.constructor, proto = typeof Ctor == "function" && Ctor.prototype || objectProto;
+      return value === proto;
+    }
+    module2.exports = isPrototype;
+  }
+});
+
+// node_modules/lodash/_overArg.js
+var require_overArg = __commonJS({
+  "node_modules/lodash/_overArg.js"(exports, module2) {
+    function overArg(func, transform) {
+      return function(arg) {
+        return func(transform(arg));
+      };
+    }
+    module2.exports = overArg;
+  }
+});
+
+// node_modules/lodash/_nativeKeys.js
+var require_nativeKeys = __commonJS({
+  "node_modules/lodash/_nativeKeys.js"(exports, module2) {
+    var overArg = require_overArg();
+    var nativeKeys = overArg(Object.keys, Object);
+    module2.exports = nativeKeys;
+  }
+});
+
+// node_modules/lodash/_baseKeys.js
+var require_baseKeys = __commonJS({
+  "node_modules/lodash/_baseKeys.js"(exports, module2) {
+    var isPrototype = require_isPrototype();
+    var nativeKeys = require_nativeKeys();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    function baseKeys(object) {
+      if (!isPrototype(object)) {
+        return nativeKeys(object);
+      }
+      var result = [];
+      for (var key in Object(object)) {
+        if (hasOwnProperty.call(object, key) && key != "constructor") {
+          result.push(key);
+        }
+      }
+      return result;
+    }
+    module2.exports = baseKeys;
+  }
+});
+
+// node_modules/lodash/isObject.js
+var require_isObject = __commonJS({
+  "node_modules/lodash/isObject.js"(exports, module2) {
+    function isObject(value) {
+      var type = typeof value;
+      return value != null && (type == "object" || type == "function");
+    }
+    module2.exports = isObject;
+  }
+});
+
+// node_modules/lodash/isFunction.js
+var require_isFunction = __commonJS({
+  "node_modules/lodash/isFunction.js"(exports, module2) {
+    var baseGetTag = require_baseGetTag();
+    var isObject = require_isObject();
+    var asyncTag = "[object AsyncFunction]";
+    var funcTag = "[object Function]";
+    var genTag = "[object GeneratorFunction]";
+    var proxyTag = "[object Proxy]";
+    function isFunction(value) {
+      if (!isObject(value)) {
+        return false;
+      }
+      var tag = baseGetTag(value);
+      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+    }
+    module2.exports = isFunction;
+  }
+});
+
+// node_modules/lodash/isArrayLike.js
+var require_isArrayLike = __commonJS({
+  "node_modules/lodash/isArrayLike.js"(exports, module2) {
+    var isFunction = require_isFunction();
+    var isLength = require_isLength();
+    function isArrayLike(value) {
+      return value != null && isLength(value.length) && !isFunction(value);
+    }
+    module2.exports = isArrayLike;
+  }
+});
+
+// node_modules/lodash/keys.js
+var require_keys = __commonJS({
+  "node_modules/lodash/keys.js"(exports, module2) {
+    var arrayLikeKeys = require_arrayLikeKeys();
+    var baseKeys = require_baseKeys();
+    var isArrayLike = require_isArrayLike();
+    function keys(object) {
+      return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
+    }
+    module2.exports = keys;
+  }
+});
+
+// node_modules/lodash/values.js
+var require_values = __commonJS({
+  "node_modules/lodash/values.js"(exports, module2) {
+    var baseValues = require_baseValues();
+    var keys = require_keys();
+    function values(object) {
+      return object == null ? [] : baseValues(object, keys(object));
+    }
+    module2.exports = values;
+  }
+});
+
+// node_modules/lodash/_baseSample.js
+var require_baseSample = __commonJS({
+  "node_modules/lodash/_baseSample.js"(exports, module2) {
+    var arraySample = require_arraySample();
+    var values = require_values();
+    function baseSample(collection) {
+      return arraySample(values(collection));
+    }
+    module2.exports = baseSample;
+  }
+});
+
+// node_modules/lodash/sample.js
+var require_sample = __commonJS({
+  "node_modules/lodash/sample.js"(exports, module2) {
+    var arraySample = require_arraySample();
+    var baseSample = require_baseSample();
+    var isArray = require_isArray();
+    function sample2(collection) {
+      var func = isArray(collection) ? arraySample : baseSample;
+      return func(collection);
+    }
+    module2.exports = sample2;
+  }
+});
+
 // server/src/server.ts
 var import_crypto = require("crypto");
 var import_express = __toESM(require_express2());
 var import_fs = require("fs");
 var import_promises = require("fs/promises");
 var import_path = require("path");
+
+// common/puzzle.ts
+var import_sample = __toESM(require_sample());
+function shift(game, direction) {
+  switch (direction) {
+    case "N":
+      game.board = shiftNorth(game.board, game.size);
+      break;
+    case "E":
+      game.board = shiftEast(game.board, game.size);
+      break;
+    case "S":
+      game.board = shiftSouth(game.board, game.size);
+      break;
+    case "W":
+      game.board = shiftWest(game.board, game.size);
+      break;
+    default:
+      throw new Error("Invalid direction");
+  }
+}
+function shiftNorth(board, size) {
+  const newBoard = transpose(board);
+  shiftWest(newBoard, size);
+  return transpose(newBoard);
+}
+function shiftEast(board, size) {
+  const newBoard = flipH(board);
+  shiftWest(newBoard, size);
+  return flipH(newBoard);
+}
+function shiftSouth(board, size) {
+  const newBoard = flipH(transpose(board));
+  shiftWest(newBoard, size);
+  return transpose(flipH(newBoard));
+}
+function shiftWest(board, size) {
+  for (let y = 0; y < size; y++) {
+    const row = board[y].filter((cell) => cell !== 0);
+    for (let x = 0; x < row.length - 1; x++) {
+      if (row[x] === -1)
+        continue;
+      if (row[x] === row[x + 1]) {
+        row[x] = row[x] * 2;
+        row[x + 1] = -1;
+      }
+    }
+    board[y] = zeroFill(
+      row.filter((cell) => cell !== -1),
+      size
+    );
+  }
+  return board;
+}
+function transpose(array) {
+  return array[0].map((_, colIndex) => array.map((row) => row[colIndex]));
+}
+function flipH(array) {
+  return array.map((row) => [...row].reverse());
+}
+function zeroFill(arr, length) {
+  return [...arr, ...Array(length).fill(0)].slice(0, length);
+}
+function addNumber(game) {
+  const emptyCoords = [];
+  for (let x = 0; x < game.size; x++) {
+    for (let y = 0; y < game.size; y++) {
+      if (game.board[y][x] === 0) {
+        emptyCoords.push([x, y]);
+      }
+    }
+  }
+  if (emptyCoords.length === 0) {
+    throw "TODO: handle end game";
+  } else {
+    const [x, y] = (0, import_sample.default)(emptyCoords);
+    game.board[y][x] = 2;
+  }
+}
+function emptyBoard(size) {
+  const grid = [];
+  for (let row = 0; row < size; row++) {
+    grid[row] = [];
+    for (let col = 0; col < size; col++) {
+      grid[row][col] = 0;
+    }
+  }
+  return grid;
+}
+
+// server/src/server.ts
 var PORT = 8090;
 var DEFAULT_GRID_SIZE = 6;
 var DIST_PATH = (0, import_path.resolve)(__dirname, "../../client/dist");
@@ -23226,12 +23831,14 @@ app.get("/api/game/:id", (req, res) => {
   }
   res.json(game);
 });
-app.post("/api/game/:id/move", (req, res) => {
+app.post("/api/game/:id/move", async (req, res) => {
   const game = games[req.params.id];
   if (!game) {
     throw new Error("Game not found");
   }
-  game.moveHistory.push({ player: 1, direction: req.body.direction });
+  shift(game, req.body.direction);
+  addNumber(game);
+  await writeGames();
   res.json({ ok: true });
 });
 app.get("*", (_, res, next) => {
@@ -23247,12 +23854,9 @@ async function startGame(players) {
   games[id] = {
     players,
     size,
-    moveHistory: [],
-    startCoordinate: [
-      Math.floor(Math.random() * size),
-      Math.floor(Math.random() * size)
-    ]
+    board: emptyBoard(DEFAULT_GRID_SIZE)
   };
+  addNumber(games[id]);
   await writeGames();
   return id;
 }

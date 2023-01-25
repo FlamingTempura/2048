@@ -29497,8 +29497,9 @@
   function GameScreen() {
     const { id } = useParams();
     const queryClient = useQueryClient();
+    const queryKey = (0, import_react7.useMemo)(() => ["game", id], [id]);
     const gameQuery = useQuery({
-      queryKey: ["game", id],
+      queryKey,
       queryFn: async () => {
         const res = await fetch(`/api/game/${id}`);
         if (res.status !== 200) {
@@ -29521,11 +29522,12 @@
           throw new Error("Unexpected response status");
         }
         return res.json();
-      }
+      },
+      onSuccess: () => queryClient.invalidateQueries(queryKey)
     });
-    const handleDown = async () => {
-      await moveMutation.mutate({ direction: "S" });
-      queryClient.invalidateQueries(["game", id]);
+    const handleShift = async (direction) => {
+      await moveMutation.mutate({ direction });
+      console.log("invalidating");
     };
     if (gameQuery.status === "loading") {
       return /* @__PURE__ */ import_react7.default.createElement("p", null, "Loading...");
@@ -29536,48 +29538,38 @@
     if (gameQuery.status === "idle") {
       return /* @__PURE__ */ import_react7.default.createElement(import_react7.default.Fragment, null, "Idle");
     }
-    return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h2", null, "The game ", id), /* @__PURE__ */ import_react7.default.createElement(GameBoard, { game: gameQuery.data }), /* @__PURE__ */ import_react7.default.createElement("button", { onClick: handleDown, disabled: moveMutation.status === "loading" }, "Down"));
+    return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h2", null, "The game ", id), /* @__PURE__ */ import_react7.default.createElement(GameBoard, { game: gameQuery.data }), /* @__PURE__ */ import_react7.default.createElement(
+      "button",
+      {
+        onClick: () => handleShift("N"),
+        disabled: moveMutation.status === "loading"
+      },
+      "Up"
+    ), /* @__PURE__ */ import_react7.default.createElement(
+      "button",
+      {
+        onClick: () => handleShift("E"),
+        disabled: moveMutation.status === "loading"
+      },
+      "Right"
+    ), /* @__PURE__ */ import_react7.default.createElement(
+      "button",
+      {
+        onClick: () => handleShift("S"),
+        disabled: moveMutation.status === "loading"
+      },
+      "Down"
+    ), /* @__PURE__ */ import_react7.default.createElement(
+      "button",
+      {
+        onClick: () => handleShift("W"),
+        disabled: moveMutation.status === "loading"
+      },
+      "Left"
+    ));
   }
   function GameBoard({ game }) {
-    const board = (0, import_react7.useMemo)(() => getBoardState(game), [game]);
-    return /* @__PURE__ */ import_react7.default.createElement(Grid, { size: game.size }, board.map((row, y2) => /* @__PURE__ */ import_react7.default.createElement(import_react7.Fragment, { key: y2 }, row.map((cell, x2) => /* @__PURE__ */ import_react7.default.createElement(Cell, { key: x2 }, cell)))));
-  }
-  function getBoardState(game) {
-    const grid = emptyGrid(game.size);
-    grid[game.startCoordinate[1]][game.startCoordinate[0]] = 2;
-    for (const move of game.moveHistory) {
-      switch (move.direction) {
-        case "S":
-          for (let x2 = 0; x2 < game.size; x2++) {
-            let newCol = grid.map((row) => row[x2]).filter((cell) => cell !== 0);
-            let skipNext = false;
-            for (let i2 = 1; i2 < newCol.length; i2++) {
-              if (newCol[i2] === newCol[i2 - 1]) {
-                newCol[i2 - 1] = 0;
-                newCol[i2] *= 2;
-                skipNext = true;
-              } else {
-                skipNext = false;
-              }
-            }
-            for (let y2 = 0; y2 < game.size; y2++) {
-              grid[y2][x2] = newCol[y2 - newCol.length] ?? 0;
-            }
-          }
-        default:
-      }
-    }
-    return grid;
-  }
-  function emptyGrid(size) {
-    const grid = [];
-    for (let row = 0; row < size; row++) {
-      grid[row] = [];
-      for (let col = 0; col < size; col++) {
-        grid[row][col] = 0;
-      }
-    }
-    return grid;
+    return /* @__PURE__ */ import_react7.default.createElement(Grid, { size: game.size }, game.board.map((row, y2) => /* @__PURE__ */ import_react7.default.createElement(import_react7.Fragment, { key: y2 }, row.map((cell, x2) => /* @__PURE__ */ import_react7.default.createElement(Cell, { key: x2 }, cell)))));
   }
   var Grid = styled_components_browser_esm_default.div`
   display: grid;

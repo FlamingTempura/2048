@@ -2,8 +2,9 @@ import { randomUUID } from "crypto";
 import express from "express";
 import { readdirSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
-import { join, resolve } from "path";
-import { Game } from "../../common/types";
+import { resolve } from "path";
+import { addNumber, emptyBoard, shift } from "../../common/puzzle";
+import { Game, ShiftResult } from "../../common/types";
 
 const PORT = 8090;
 const DEFAULT_GRID_SIZE = 6;
@@ -33,12 +34,14 @@ app.get("/api/game/:id", (req, res) => {
 });
 
 // Expects { direction: N/E/S/W }
-app.post("/api/game/:id/move", (req, res) => {
+app.post("/api/game/:id/move", async (req, res) => {
   const game = games[req.params.id];
   if (!game) {
     throw new Error("Game not found");
   }
-  game.moveHistory.push({ player: 1, direction: req.body.direction });
+  shift(game, req.body.direction);
+  addNumber(game);
+  await writeGames();
   res.json({ ok: true });
 });
 
@@ -58,12 +61,9 @@ async function startGame(players: number): Promise<string> {
   games[id] = {
     players,
     size,
-    moveHistory: [],
-    startCoordinate: [
-      Math.floor(Math.random() * size),
-      Math.floor(Math.random() * size),
-    ],
+    board: emptyBoard(DEFAULT_GRID_SIZE),
   };
+  addNumber(games[id]);
   await writeGames();
   return id;
 }

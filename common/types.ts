@@ -1,11 +1,7 @@
 export type Game = {
   size: number;
   players: number;
-  moveHistory: Move[];
-  /**
-   * Defines the initial grid as a location of the number 2 within the grid.
-   */
-  startCoordinate: [number, number];
+  board: number[][];
 };
 
 type Move = {
@@ -15,3 +11,8 @@ type Move = {
 };
 
 export type Direction = "N" | "E" | "S" | "W";
+
+export type ShiftResult = {
+  board: number[][];
+  //transitions: { from: [number, number], to: [number, number], score: number }
+};
