@@ -784,7 +784,7 @@
             }
             return children;
           }
-          function createContext2(defaultValue) {
+          function createContext3(defaultValue) {
             var context = {
               $$typeof: REACT_CONTEXT_TYPE,
               // As a workaround to support multiple concurrent renderers, we categorize
@@ -1070,7 +1070,7 @@
             }
             return dispatcher;
           }
-          function useContext3(Context) {
+          function useContext7(Context) {
             var dispatcher = resolveDispatcher();
             {
               if (Context._context !== void 0) {
@@ -1084,7 +1084,7 @@
             }
             return dispatcher.useContext(Context);
           }
-          function useState6(initialState) {
+          function useState7(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1096,7 +1096,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect4(create, deps) {
+          function useEffect5(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1112,7 +1112,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
-          function useMemo4(create, deps) {
+          function useMemo5(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useMemo(create, deps);
           }
@@ -1864,7 +1864,7 @@
           exports.Suspense = REACT_SUSPENSE_TYPE;
           exports.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactSharedInternals;
           exports.cloneElement = cloneElement$1;
-          exports.createContext = createContext2;
+          exports.createContext = createContext3;
           exports.createElement = createElement$1;
           exports.createFactory = createFactory;
           exports.createRef = createRef;
@@ -1875,18 +1875,18 @@
           exports.startTransition = startTransition;
           exports.unstable_act = act;
           exports.useCallback = useCallback3;
-          exports.useContext = useContext3;
+          exports.useContext = useContext7;
           exports.useDebugValue = useDebugValue2;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect4;
+          exports.useEffect = useEffect5;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect4;
-          exports.useMemo = useMemo4;
+          exports.useMemo = useMemo5;
           exports.useReducer = useReducer;
           exports.useRef = useRef3;
-          exports.useState = useState6;
+          exports.useState = useState7;
           exports.useSyncExternalStore = useSyncExternalStore2;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -2382,9 +2382,9 @@
           if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
             __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
           }
-          var React10 = require_react();
+          var React12 = require_react();
           var Scheduler = require_scheduler();
-          var ReactSharedInternals = React10.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React12.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           var suppressWarning = false;
           function setSuppressWarning(newSuppressWarning) {
             {
@@ -3989,7 +3989,7 @@
             {
               if (props.value == null) {
                 if (typeof props.children === "object" && props.children !== null) {
-                  React10.Children.forEach(props.children, function(child) {
+                  React12.Children.forEach(props.children, function(child) {
                     if (child == null) {
                       return;
                     }
@@ -12436,7 +12436,7 @@
             }
           }
           var fakeInternalInstance = {};
-          var emptyRefsObject = new React10.Component().refs;
+          var emptyRefsObject = new React12.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -23994,7 +23994,7 @@
   });
 
   // client/src/App.tsx
-  var import_react8 = __toESM(require_react());
+  var import_react10 = __toESM(require_react());
   var import_client = __toESM(require_client());
 
   // node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js
@@ -28254,6 +28254,7 @@
   // client/src/StartScreen.tsx
   function StartScreen() {
     const nav = useNavigate();
+    const playerCtx = (0, import_react5.useContext)(PlayerContext);
     const createGameMutation = useMutation({
       mutationKey: ["create-game"],
       mutationFn: async (data) => {
@@ -28268,31 +28269,26 @@
         return res.json();
       }
     });
-    const [players, setPlayers] = (0, import_react5.useState)(2);
-    const [id, setId] = (0, import_react5.useState)("");
     async function handleStart() {
-      const res = await createGameMutation.mutateAsync({ players });
-      console.log(res);
+      const res = await createGameMutation.mutateAsync({
+        hostPlayerName: playerCtx.playerName
+      });
       nav(`/game/${res.id}`);
     }
-    return /* @__PURE__ */ import_react5.default.createElement("div", null, /* @__PURE__ */ import_react5.default.createElement("h2", null, "Join game"), /* @__PURE__ */ import_react5.default.createElement("label", null, "Game ID:", " ", /* @__PURE__ */ import_react5.default.createElement(
+    return /* @__PURE__ */ import_react5.default.createElement("div", null, /* @__PURE__ */ import_react5.default.createElement("label", null, "Your name:", " ", /* @__PURE__ */ import_react5.default.createElement(
       "input",
       {
-        type: "text",
-        value: id,
-        onChange: (e2) => setId(e2.currentTarget.value)
+        type: "string",
+        value: playerCtx.playerName,
+        onChange: (e2) => playerCtx.setPlayerName(e2.currentTarget.value)
       }
-    )), /* @__PURE__ */ import_react5.default.createElement("button", null, "Join"), createGameMutation.status === "loading" ? /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, "Loading...") : /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement("h2", null, "Create game"), /* @__PURE__ */ import_react5.default.createElement("label", null, "Players:", " ", /* @__PURE__ */ import_react5.default.createElement(
-      "input",
-      {
-        type: "number",
-        value: players,
-        onChange: (e2) => setPlayers(e2.currentTarget.valueAsNumber)
-      }
-    )), /* @__PURE__ */ import_react5.default.createElement("button", { onClick: handleStart }, "Start"), createGameMutation.status === "error" ? /* @__PURE__ */ import_react5.default.createElement("p", null, String(createGameMutation.error)) : null));
+    )), createGameMutation.status === "loading" ? /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, "Loading...") : /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement("h2", null, "Create game"), /* @__PURE__ */ import_react5.default.createElement("button", { onClick: handleStart }, "Start"), createGameMutation.status === "error" ? /* @__PURE__ */ import_react5.default.createElement("p", null, String(createGameMutation.error)) : null));
   }
 
   // client/src/GameScreen.tsx
+  var import_react9 = __toESM(require_react());
+
+  // client/src/GameBoard.tsx
   var import_react7 = __toESM(require_react());
 
   // node_modules/styled-components/dist/styled-components.browser.esm.js
@@ -29493,26 +29489,16 @@
   "undefined" != typeof navigator && "ReactNative" === navigator.product && console.warn("It looks like you've imported 'styled-components' on React Native.\nPerhaps you're looking to import 'styled-components/native'?\nRead more about this at https://www.styled-components.com/docs/basics#react-native"), "undefined" != typeof window && (window["__styled-components-init__"] = window["__styled-components-init__"] || 0, 1 === window["__styled-components-init__"] && console.warn("It looks like there are several instances of 'styled-components' initialized in this application. This may cause dynamic styles to not render properly, errors during the rehydration process, a missing theme prop, and makes your application bigger without good reason.\n\nSee https://s-c.sh/2BAXzed for more info."), window["__styled-components-init__"] += 1);
   var styled_components_browser_esm_default = He;
 
-  // client/src/GameScreen.tsx
-  function GameScreen() {
+  // client/src/GameBoard.tsx
+  function GameBoard({
+    game,
+    gameQueryKey
+  }) {
     const { id } = useParams();
     const queryClient = useQueryClient();
-    const queryKey = (0, import_react7.useMemo)(() => ["game", id], [id]);
-    const gameQuery = useQuery({
-      queryKey,
-      queryFn: async () => {
-        const res = await fetch(`/api/game/${id}`);
-        if (res.status !== 200) {
-          throw new Error("Unexpected response status");
-        }
-        return res.json();
-      },
-      cacheTime: 0
-    });
     const moveMutation = useMutation({
       mutationKey: ["move"],
       mutationFn: async (data) => {
-        console.log("mutating");
         const res = await fetch(`/api/game/${id}/move`, {
           method: "POST",
           body: JSON.stringify(data),
@@ -29523,22 +29509,31 @@
         }
         return res.json();
       },
-      onSuccess: () => queryClient.invalidateQueries(queryKey)
+      onSuccess: () => queryClient.invalidateQueries(gameQueryKey)
+    });
+    const kickMutation = useMutation({
+      mutationKey: ["kick"],
+      mutationFn: async (data) => {
+        const res = await fetch(`/api/game/${id}/player/${activePlayer.name}`, {
+          method: "DELETE",
+          body: JSON.stringify(data),
+          headers: { "content-type": "application/json" }
+        });
+        if (res.status !== 200) {
+          throw new Error("Unexpected response status");
+        }
+        return res.json();
+      },
+      onSuccess: () => queryClient.invalidateQueries(gameQueryKey)
     });
     const handleShift = async (direction) => {
       await moveMutation.mutate({ direction });
-      console.log("invalidating");
     };
-    if (gameQuery.status === "loading") {
-      return /* @__PURE__ */ import_react7.default.createElement("p", null, "Loading...");
-    }
-    if (gameQuery.status === "error") {
-      return /* @__PURE__ */ import_react7.default.createElement("p", null, "Error! ", String(gameQuery.error));
-    }
-    if (gameQuery.status === "idle") {
-      return /* @__PURE__ */ import_react7.default.createElement(import_react7.default.Fragment, null, "Idle");
-    }
-    return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h2", null, "The game ", id), /* @__PURE__ */ import_react7.default.createElement(GameBoard, { game: gameQuery.data }), /* @__PURE__ */ import_react7.default.createElement(
+    const { playerName } = (0, import_react7.useContext)(PlayerContext);
+    const player = game.players.find((p) => p.name === playerName);
+    const activePlayer = game.players[game.activePlayerIndex];
+    const isActivePlayer = player?.name === activePlayer.name;
+    return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h2", null, "The game ", id), player ? /* @__PURE__ */ import_react7.default.createElement("p", null, "Your score: ", player.score) : /* @__PURE__ */ import_react7.default.createElement("p", null, "You are spectating"), isActivePlayer ? /* @__PURE__ */ import_react7.default.createElement("p", null, "Your turn") : /* @__PURE__ */ import_react7.default.createElement("p", null, activePlayer.name, "'s turn", " ", /* @__PURE__ */ import_react7.default.createElement("button", { onClick: () => kickMutation.mutate() }, "Kick")), /* @__PURE__ */ import_react7.default.createElement(GameBoardGrid, { game }), isActivePlayer && /* @__PURE__ */ import_react7.default.createElement(import_react7.default.Fragment, null, /* @__PURE__ */ import_react7.default.createElement(
       "button",
       {
         onClick: () => handleShift("N"),
@@ -29566,9 +29561,9 @@
         disabled: moveMutation.status === "loading"
       },
       "Left"
-    ));
+    )), /* @__PURE__ */ import_react7.default.createElement("div", null, "Scores:", /* @__PURE__ */ import_react7.default.createElement("ul", null, game.players.map((player2) => /* @__PURE__ */ import_react7.default.createElement("li", { key: player2.name }, player2.name, ": ", player2.score)))));
   }
-  function GameBoard({ game }) {
+  function GameBoardGrid({ game }) {
     return /* @__PURE__ */ import_react7.default.createElement(Grid, { size: game.size }, game.board.map((row, y2) => /* @__PURE__ */ import_react7.default.createElement(import_react7.Fragment, { key: y2 }, row.map((cell, x2) => /* @__PURE__ */ import_react7.default.createElement(Cell, { key: x2 }, cell)))));
   }
   var Grid = styled_components_browser_esm_default.div`
@@ -29583,14 +29578,114 @@
   line-height: 60px;
 `;
 
+  // client/src/Lobby.tsx
+  var import_react8 = __toESM(require_react());
+  function LobbyScreen({
+    game,
+    gameQueryKey
+  }) {
+    const { id } = useParams();
+    const queryClient = useQueryClient();
+    const { playerName, setPlayerName } = (0, import_react8.useContext)(PlayerContext);
+    const startMutation = useMutation({
+      mutationKey: ["start"],
+      mutationFn: async (data) => {
+        const res = await fetch(`/api/game/${id}`, {
+          method: "PUT",
+          body: JSON.stringify({ state: "STARTED" }),
+          headers: { "content-type": "application/json" }
+        });
+        if (res.status !== 200) {
+          throw new Error("Unexpected response status");
+        }
+        return res.json();
+      },
+      onSuccess: () => queryClient.invalidateQueries(gameQueryKey)
+    });
+    const joinMutation = useMutation({
+      mutationKey: ["join"],
+      // FIXME
+      mutationFn: async () => {
+        const res = await fetch(`/api/game/${id}/player`, {
+          method: "POST",
+          body: JSON.stringify({ playerName }),
+          headers: { "content-type": "application/json" }
+        });
+        if (res.status !== 200) {
+          throw new Error("Unexpected response status");
+        }
+        return res.json();
+      },
+      onSuccess: () => queryClient.invalidateQueries(gameQueryKey)
+    });
+    const joined = playerName && game.players.find((p) => p.name === playerName);
+    return /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement("h2", null, "Lobby"), /* @__PURE__ */ import_react8.default.createElement("p", null, "Game ID: ", id), /* @__PURE__ */ import_react8.default.createElement("p", null, "Players:"), /* @__PURE__ */ import_react8.default.createElement("ul", null, game.players.map((player) => /* @__PURE__ */ import_react8.default.createElement("li", { key: player.name }, player.name, " ", player.name === playerName ? "(You)" : null))), !joined ? /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null, /* @__PURE__ */ import_react8.default.createElement("label", null, "Your name:", " ", /* @__PURE__ */ import_react8.default.createElement(
+      "input",
+      {
+        value: playerName,
+        onChange: (e2) => setPlayerName(e2.currentTarget.value)
+      }
+    )), /* @__PURE__ */ import_react8.default.createElement(
+      "button",
+      {
+        onClick: () => joinMutation.mutate(),
+        disabled: playerName === ""
+      },
+      "Join game"
+    )) : /* @__PURE__ */ import_react8.default.createElement("button", { onClick: () => startMutation.mutate() }, "Start"));
+  }
+
+  // client/src/GameScreen.tsx
+  function GameScreen() {
+    const { id } = useParams();
+    const queryKey = (0, import_react9.useMemo)(() => ["game", id], [id]);
+    const gameQuery = useQuery({
+      queryKey,
+      queryFn: async () => {
+        const res = await fetch(`/api/game/${id}`);
+        if (res.status !== 200) {
+          throw new Error("Unexpected response status");
+        }
+        return res.json();
+      },
+      cacheTime: 0,
+      refetchInterval: 1e3
+    });
+    if (gameQuery.status === "loading") {
+      return /* @__PURE__ */ import_react9.default.createElement("p", null, "Loading...");
+    }
+    if (gameQuery.status === "error") {
+      return /* @__PURE__ */ import_react9.default.createElement("p", null, "Error! ", String(gameQuery.error));
+    }
+    if (gameQuery.status === "idle") {
+      return /* @__PURE__ */ import_react9.default.createElement(import_react9.default.Fragment, null, "Idle");
+    }
+    switch (gameQuery.data.state) {
+      case "LOBBY":
+        return /* @__PURE__ */ import_react9.default.createElement(LobbyScreen, { game: gameQuery.data, gameQueryKey: queryKey });
+      case "STARTED":
+        return /* @__PURE__ */ import_react9.default.createElement(GameBoard, { game: gameQuery.data, gameQueryKey: queryKey });
+      case "ENDED":
+        return /* @__PURE__ */ import_react9.default.createElement("p", null, "This game has ended");
+    }
+  }
+
   // client/src/App.tsx
   var client = new QueryClient();
+  var LOCAL_STORE_KEY = "2048PlayerName";
   function App() {
-    return /* @__PURE__ */ import_react8.default.createElement(QueryClientProvider, { client }, /* @__PURE__ */ import_react8.default.createElement(BrowserRouter, null, /* @__PURE__ */ import_react8.default.createElement(Routes, null, /* @__PURE__ */ import_react8.default.createElement(Route, { path: "/game/:id", element: /* @__PURE__ */ import_react8.default.createElement(GameScreen, null) }), /* @__PURE__ */ import_react8.default.createElement(Route, { path: "/", element: /* @__PURE__ */ import_react8.default.createElement(StartScreen, null) }))));
+    const [playerName, setPlayerName] = (0, import_react10.useState)(
+      localStorage.getItem(LOCAL_STORE_KEY) ?? ""
+    );
+    (0, import_react10.useEffect)(() => {
+      localStorage.setItem(LOCAL_STORE_KEY, playerName);
+    }, [playerName]);
+    return /* @__PURE__ */ import_react10.default.createElement(QueryClientProvider, { client }, /* @__PURE__ */ import_react10.default.createElement(PlayerContext.Provider, { value: { playerName, setPlayerName } }, /* @__PURE__ */ import_react10.default.createElement(BrowserRouter, null, /* @__PURE__ */ import_react10.default.createElement(Routes, null, /* @__PURE__ */ import_react10.default.createElement(Route, { path: "/game/:id", element: /* @__PURE__ */ import_react10.default.createElement(GameScreen, null) }), /* @__PURE__ */ import_react10.default.createElement(Route, { path: "/", element: /* @__PURE__ */ import_react10.default.createElement(StartScreen, null) })))));
   }
   var container = document.getElementById("root");
   var root = (0, import_client.createRoot)(container);
-  root.render(/* @__PURE__ */ import_react8.default.createElement(App, null));
+  root.render(/* @__PURE__ */ import_react10.default.createElement(App, null));
+  var PlayerContext = (0, import_react10.createContext)({ playerName: "", setPlayerName: () => void 0 });
 })();
 /*! Bundled license information:
 

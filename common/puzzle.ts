@@ -1,44 +1,48 @@
-import { Direction, Game } from "./types";
+import { Direction, Game, ShiftResult } from "./types";
 import sample from "lodash/sample";
 
 export function shift(game: Game, direction: Direction): void {
+  let shiftResult: ShiftResult;
   switch (direction) {
     case "N":
-      game.board = shiftNorth(game.board, game.size);
+      shiftResult = shiftNorth(game.board, game.size);
       break;
     case "E":
-      game.board = shiftEast(game.board, game.size);
+      shiftResult = shiftEast(game.board, game.size);
       break;
     case "S":
-      game.board = shiftSouth(game.board, game.size);
+      shiftResult = shiftSouth(game.board, game.size);
       break;
     case "W":
-      game.board = shiftWest(game.board, game.size);
+      shiftResult = shiftWest(game.board, game.size);
       break;
     default:
       throw new Error("Invalid direction");
   }
+  game.board = shiftResult.board;
+  game.players[game.activePlayerIndex].score += shiftResult.score;
 }
 
-function shiftNorth(board: number[][], size: number): number[][] {
+function shiftNorth(board: number[][], size: number): ShiftResult {
   const newBoard = transpose(board);
-  shiftWest(newBoard, size);
-  return transpose(newBoard);
+  const res = shiftWest(newBoard, size);
+  return { ...res, board: transpose(res.board) };
 }
 
-function shiftEast(board: number[][], size: number): number[][] {
+function shiftEast(board: number[][], size: number): ShiftResult {
   const newBoard = flipH(board);
-  shiftWest(newBoard, size);
-  return flipH(newBoard);
+  const res = shiftWest(newBoard, size);
+  return { ...res, board: flipH(res.board) };
 }
 
-function shiftSouth(board: number[][], size: number): number[][] {
+function shiftSouth(board: number[][], size: number): ShiftResult {
   const newBoard = flipH(transpose(board));
-  shiftWest(newBoard, size);
-  return transpose(flipH(newBoard));
+  const res = shiftWest(newBoard, size);
+  return { ...res, board: transpose(flipH(res.board)) };
 }
 
-function shiftWest(board: number[][], size: number): number[][] {
+function shiftWest(board: number[][], size: number): ShiftResult {
+  let score = 0;
   for (let y = 0; y < size; y++) {
     const row = board[y].filter((cell) => cell !== 0);
 
@@ -46,6 +50,7 @@ function shiftWest(board: number[][], size: number): number[][] {
       if (row[x] === -1) continue;
       // check if next is equal
       if (row[x] === row[x + 1]) {
+        score = row[x] * 2;
         row[x] = row[x] * 2;
         row[x + 1] = -1; // ignore the next cell
       }
@@ -55,7 +60,7 @@ function shiftWest(board: number[][], size: number): number[][] {
       size
     );
   }
-  return board;
+  return { board, score };
 }
 
 function transpose(array: number[][]): number[][] {

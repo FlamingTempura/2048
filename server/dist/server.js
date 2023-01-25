@@ -23724,45 +23724,50 @@ var import_path = require("path");
 // common/puzzle.ts
 var import_sample = __toESM(require_sample());
 function shift(game, direction) {
+  let shiftResult;
   switch (direction) {
     case "N":
-      game.board = shiftNorth(game.board, game.size);
+      shiftResult = shiftNorth(game.board, game.size);
       break;
     case "E":
-      game.board = shiftEast(game.board, game.size);
+      shiftResult = shiftEast(game.board, game.size);
       break;
     case "S":
-      game.board = shiftSouth(game.board, game.size);
+      shiftResult = shiftSouth(game.board, game.size);
       break;
     case "W":
-      game.board = shiftWest(game.board, game.size);
+      shiftResult = shiftWest(game.board, game.size);
       break;
     default:
       throw new Error("Invalid direction");
   }
+  game.board = shiftResult.board;
+  game.players[game.activePlayerIndex].score += shiftResult.score;
 }
 function shiftNorth(board, size) {
   const newBoard = transpose(board);
-  shiftWest(newBoard, size);
-  return transpose(newBoard);
+  const res = shiftWest(newBoard, size);
+  return { ...res, board: transpose(res.board) };
 }
 function shiftEast(board, size) {
   const newBoard = flipH(board);
-  shiftWest(newBoard, size);
-  return flipH(newBoard);
+  const res = shiftWest(newBoard, size);
+  return { ...res, board: flipH(res.board) };
 }
 function shiftSouth(board, size) {
   const newBoard = flipH(transpose(board));
-  shiftWest(newBoard, size);
-  return transpose(flipH(newBoard));
+  const res = shiftWest(newBoard, size);
+  return { ...res, board: transpose(flipH(res.board)) };
 }
 function shiftWest(board, size) {
+  let score = 0;
   for (let y = 0; y < size; y++) {
     const row = board[y].filter((cell) => cell !== 0);
     for (let x = 0; x < row.length - 1; x++) {
       if (row[x] === -1)
         continue;
       if (row[x] === row[x + 1]) {
+        score = row[x] * 2;
         row[x] = row[x] * 2;
         row[x + 1] = -1;
       }
@@ -23772,7 +23777,7 @@ function shiftWest(board, size) {
       size
     );
   }
-  return board;
+  return { board, score };
 }
 function transpose(array) {
   return array[0].map((_, colIndex) => array.map((row) => row[colIndex]));
@@ -23817,19 +23822,59 @@ var DIST_PATH = (0, import_path.resolve)(__dirname, "../../client/dist");
 var app = (0, import_express.default)();
 app.use(import_express.default.json());
 app.use(import_express.default.static(DIST_PATH));
-app.post("/api/game", async (req, res) => {
-  console.log(req.body);
-  if (typeof req.body.players !== "number") {
-    throw new Error("Expected number for players");
+app.post("/api/game", async (req, res, next) => {
+  if (typeof req.body.hostPlayerName !== "string" && req.body.hostPlayerName !== "") {
+    next(new Error("Expected host player name"));
+  } else {
+    res.json({ id: await startGame(req.body.hostPlayerName) });
   }
-  res.json({ id: await startGame(req.body.players) });
 });
-app.get("/api/game/:id", (req, res) => {
+app.get("/api/game/:id", (req, res, next) => {
   const game = games[req.params.id];
   if (!game) {
-    throw new Error("Game not found");
+    next(new Error("Game not found"));
+  } else {
+    res.json(game);
   }
-  res.json(game);
+});
+app.put("/api/game/:id", (req, res, next) => {
+  const game = games[req.params.id];
+  if (!game) {
+    next(new Error("Game not found"));
+  }
+  if (req.body.state === "STARTED") {
+    game.state = "STARTED";
+    writeGames();
+    res.json(game);
+  } else {
+    next(new Error("Invalid request"));
+  }
+});
+app.post("/api/game/:id/player", async (req, res, next) => {
+  const game = games[req.params.id];
+  if (!game) {
+    next(new Error("Game not found"));
+  }
+  game.players.push({ name: req.body.playerName, score: 0 });
+  await writeGames();
+  res.json({ ok: true });
+});
+app.delete("/api/game/:id/player/:name", async (req, res, next) => {
+  const game = games[req.params.id];
+  if (!game) {
+    next(new Error("Game not found"));
+  }
+  const index = game.players.findIndex((p) => p.name === req.params.name);
+  if (index === -1) {
+    res.json({});
+  } else {
+    if (game.activePlayerIndex > index) {
+      game.activePlayerIndex--;
+    }
+    game.players.splice(index, 1);
+  }
+  await writeGames();
+  res.json({ ok: true });
 });
 app.post("/api/game/:id/move", async (req, res) => {
   const game = games[req.params.id];
@@ -23837,6 +23882,10 @@ app.post("/api/game/:id/move", async (req, res) => {
     throw new Error("Game not found");
   }
   shift(game, req.body.direction);
+  game.activePlayerIndex += 1;
+  if (game.activePlayerIndex >= game.players.length) {
+    game.activePlayerIndex = 0;
+  }
   addNumber(game);
   await writeGames();
   res.json({ ok: true });
@@ -23848,13 +23897,15 @@ app.listen(PORT).on("listening", () => {
   console.log(`Listening on port http://127.0.0.1:${PORT}`);
 });
 console.log((0, import_fs.readdirSync)("./client/dist"));
-async function startGame(players) {
+async function startGame(hostPlayerName) {
   const id = (0, import_crypto.randomUUID)();
   const size = DEFAULT_GRID_SIZE;
   games[id] = {
-    players,
+    players: [{ name: hostPlayerName, score: 0 }],
+    activePlayerIndex: 0,
     size,
-    board: emptyBoard(DEFAULT_GRID_SIZE)
+    board: emptyBoard(DEFAULT_GRID_SIZE),
+    state: "LOBBY"
   };
   addNumber(games[id]);
   await writeGames();

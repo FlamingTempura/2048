@@ -1,7 +1,12 @@
 export type Game = {
   size: number;
-  players: number;
+  players: {
+    name: string;
+    score: number;
+  }[];
+  activePlayerIndex: number;
   board: number[][];
+  state: "LOBBY" | "STARTED" | "ENDED";
 };
 
 type Move = {
@@ -14,5 +19,6 @@ export type Direction = "N" | "E" | "S" | "W";
 
 export type ShiftResult = {
   board: number[][];
+  score: number;
   //transitions: { from: [number, number], to: [number, number], score: number }
 };
